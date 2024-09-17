@@ -5,8 +5,6 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-import { requestOpenAi } from '@/feature/requestOpenAi';
-
 export default function HomeScreen() {
   return (
     <ParallaxScrollView
@@ -46,7 +44,6 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
           <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-          <button onClick={requestOpenAi}>テスト</button>
         </ThemedText>
       </ThemedView>
     </ParallaxScrollView>
