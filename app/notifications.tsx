@@ -6,15 +6,18 @@ import Constants from 'expo-constants';
 export async function schedulePushNotification(
     notificationTitle:string,
     notificationTxt:string,
-    sendTime:number) 
+    endTaskDate:Date) 
   {
+    let endTime = endTaskDate.getTime();// タスクの終了時刻をミリ秒形式に変換
+    let nowTime = new Date().getTime(); // 端末の現在時刻を取得しミリ秒に変換
+    let sendTime = (endTime - nowTime) / 1000 + 4; // 終了時間-現在時刻を秒単位に変換
     await Notifications.scheduleNotificationAsync({
       content: {
         title: notificationTitle,
         body: notificationTxt,
         //data: { data: 'goes here', test: { test1: 'more data' } },
       },
-      trigger: { seconds: sendTime },
+      trigger: { seconds:sendTime},
     });
 }
   

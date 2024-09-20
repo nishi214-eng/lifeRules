@@ -28,7 +28,7 @@ export default function App() {
   );
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
-
+  let endTime = new Date();
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
 
@@ -61,7 +61,7 @@ export default function App() {
       <Button
         title="通知を送信"
         onPress={async () => {
-          await schedulePushNotification("titleTest","txtTest",12); // 通知のタイトル,テキスト,何秒後に送るかを指定
+          await schedulePushNotification("titleTest","txtTest",endTime); // 通知のタイトル,テキスト,何秒後に送るかを指定
         }}
       />
     </View>
