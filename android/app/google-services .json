@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "694929948598",
+    "project_id": "liferules-1bb5b",
+    "storage_bucket": "liferules-1bb5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:694929948598:android:0371239987c39dbcc78b17",
+        "android_client_info": {
+          "package_name": "lifeRules.user"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "694929948598-v749dkvfk9rfn9naq6a911abrmqngikd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVZzeLV95ImDblg2e4geFZc1cXtbH59_Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "694929948598-v749dkvfk9rfn9naq6a911abrmqngikd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
