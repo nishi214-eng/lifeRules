@@ -3,24 +3,36 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 
-export async function schedulePushNotification(
+// プッシュ通知を予約する関数。引数：通知のタイトル,通知のテキスト,通知を送る日付と時刻
+export const schedulePushNotification = async (
     notificationTitle:string,
     notificationTxt:string,
-    endTaskDate:Date) 
+    sendDate:Date) =>
   {
-    let endTime = endTaskDate.getTime();// タスクの終了時刻をミリ秒形式に変換
+    let endTime = sendDate.getTime();// タスクの終了時刻をミリ秒形式に変換
     let nowTime = new Date().getTime(); // 端末の現在時刻を取得しミリ秒に変換
     let sendTime = (endTime - nowTime) / 1000 + 4; // 終了時間-現在時刻を秒単位に変換
-    await Notifications.scheduleNotificationAsync({
-      content: {
-        title: notificationTitle,
-        body: notificationTxt,
-        //data: { data: 'goes here', test: { test1: 'more data' } },
-      },
-      trigger: { seconds:sendTime},
-    });
+    try{
+      const notificationId:string = await Notifications.scheduleNotificationAsync({
+        content: {
+          title: notificationTitle,
+          body: notificationTxt,
+        },
+        trigger: {seconds:sendTime},
+      });
+      return notificationId; // 通知を識別するid リターン先でローカルdbに保存
+    }catch(error){
+      console.log(error);
+    }
 }
-  
+export const cancelPushNotification = async (notificationId:string) => {
+  try{
+    await Notifications.cancelScheduledNotificationAsync(notificationId);
+  }catch(error){
+    console.log(error);
+  }
+}
+
 export async function registerForPushNotificationsAsync() {
     let token;
   
