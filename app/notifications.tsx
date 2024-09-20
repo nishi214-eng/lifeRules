@@ -3,16 +3,20 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 
-export async function schedulePushNotification() {
+export async function schedulePushNotification(
+    notificationTitle:string,
+    notificationTxt:string,
+    sendTime:number) 
+  {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: "You've got mail! 📬",
-        body: 'Here is the notification body',
-        data: { data: 'goes here', test: { test1: 'more data' } },
+        title: notificationTitle,
+        body: notificationTxt,
+        //data: { data: 'goes here', test: { test1: 'more data' } },
       },
-      trigger: { seconds: 2 },
+      trigger: { seconds: sendTime },
     });
-  }
+}
   
 export async function registerForPushNotificationsAsync() {
     let token;
