@@ -6,6 +6,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import * as FileSystem from 'expo-file-system';
 import { schedulePushNotification } from '../notifications';
 import { requestOpenAi } from '@/feature/requestOpenAi';
+import { addTask } from '@/feature/uploadFirestore';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
@@ -111,19 +112,28 @@ export default function TimeHandle({ navigation }: Props) {
       const generateTextToStr = String(generateText); // 生成文をstringに変換
       const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
       const notificationId = await schedulePushNotification(taskTitle, generateTextToStr, combinedDate); // 通知を作成
+      let notId = String(notificationId);
       const taskData = {
         taskTitle,
         selectedPriority,
         date: date.toISOString(),
         time: time.toISOString(),
         selectedTag,
-        notificationId
+        notId
       };
-
       try {
-        await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
-        console.log('Data saved to', path);
-        navigation.navigate('Home');
+        if (notId) {
+          await addTask(
+            taskData.taskTitle,
+            taskData.date,
+            taskData.time,
+            notId,
+            taskData.selectedPriority,
+            taskData.selectedTag,
+          );
+          await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
+          console.log('Data saved to', path);
+        }
       } catch (error) {
         console.error('Failed to save data:', error);
       }
@@ -133,7 +143,6 @@ export default function TimeHandle({ navigation }: Props) {
       console.error("Error generating text:", error); // エラーハンドリング
     }
   };
-
 
 
   return (
