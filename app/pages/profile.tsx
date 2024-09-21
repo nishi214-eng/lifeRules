@@ -54,7 +54,7 @@ export default function ProfileScreen({ navigation }: Props) {
                     />
                     <Text>{user.email} でログインしています</Text>
                     <TouchableOpacity style={styles.button} onPress={handleLogout}>
-                        <Text style={{ color: 'white' }}>ログアウト</Text>
+                        <Text style={{ color: 'red' }}>ログアウト</Text>
                     </TouchableOpacity>
                 </View>
             ) : (
@@ -67,6 +67,7 @@ export default function ProfileScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
     container: {
+				backgroundColor: 'white',
         flex: 1,
         justifyContent: 'center',
         padding: 20,
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
         height: 50,  // ボタンの高さも50に
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#007BFF',  // ボタンの背景色
+        backgroundColor: 'white',  // ボタンの背景色
         borderRadius: 5,
         marginTop: 20, // ボタンの上にスペースを追加
         width: '100%', // 幅を画面全体に
