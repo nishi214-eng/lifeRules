@@ -1,17 +1,29 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image, Button } from 'react-native';
+import { Text, StyleSheet, Dimensions, View, Image } from 'react-native';
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
 
 const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
-export default function HomeScreen() {
+interface Props {
+    navigation: {
+        navigate: () => void;
+    };
+}
+
+export default function HomeScreen({ navigation }: Props) {
     const [selected, setSelected] = useState(INITIAL_DATE);
+    const [state, setState] = React.useState({ open: false });
+
     const handleDayPress = (day: any) => {
         setSelected(day.dateString);
     }
+
+    const onStateChange = ({ open }: { open: boolean }) => setState({ open });
+    const { open } = state;
 
     return (
         <View style={styles.container}>
@@ -45,11 +57,40 @@ export default function HomeScreen() {
                 <Text style={styles.taskText}>{moment(selected).format("MM月DD日")} のタスク</Text>
             </View>
             {
+                /*
                 <View style={styles.add_button}>
-                    <FontAwesomeIcon style={styles.button_content} size={50} icon={faPlus} />
-                </View>
+                <Button mode="contained" style={styles.submitButton}>
+                    <FontAwesomeIcon style={styles.button_content} size={20} icon={faPlus} />
+                </Button>
+                </View>*/
             }
-
+            <PaperProvider>
+                <Portal>
+                    <FAB.Group
+                        open={open}
+                        visible
+                        icon={open ? 'plus' : 'plus'}
+                        actions={[
+                            {
+                                icon: 'note',
+                                label: 'タスクを追加',
+                                onPress: () => navigation.navigate('User')
+                            },
+                            {
+                                icon: 'calendar-today',
+                                label: 'イベントを追加',
+                                onPress: () => console.log('Pressed notifications'),
+                            },
+                        ]}
+                        onStateChange={onStateChange}
+                        onPress={() => {
+                            if (open) {
+                                // do something if the speed dial is open
+                            }
+                        }}
+                    />
+                </Portal>
+            </PaperProvider>
         </View>
     );
 }
@@ -94,8 +135,17 @@ const styles = StyleSheet.create({
     button_content: {
         color: "white",
         backgroundColor: 'aqua',
-        fontSize: 1000,
-    }
+        fontSize: 100,
+    },
+    submitButton: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginTop: 20,
+        color: "white",
+        backgroundColor: 'aqua',
+        width: 60,
+        height: 60,
+    },
 
 });
 
