@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { auth } from '../(tabs)/firebaseConfig';  // firebase.ts から auth をインポート
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
-
-//
 import React from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
@@ -15,7 +13,6 @@ interface Props {
   navigation: LoginScreenNavigationProp;
 }
 
-
 export default function Login({ navigation }: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,56 +20,48 @@ export default function Login({ navigation }: Props) {
   const [user, setUser] = useState<any | null>(null);
 
   const handleRegister = () => {
-      navigation.navigate('Register');
+    navigation.navigate('Register');
   }
 
   const handleLogin = () => {
-    // Firebase Authenticationを使ってユーザーをログイン
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // ログイン成功時の処理
         const user = userCredential.user;
         console.log('User logged in:', user);
         setUser(user); // ログイン成功時にユーザー情報を保存
+        setEmail(''); // ログイン成功後にリセット
+        setPassword(''); // ログイン成功後にリセット
         setErrorMessage(null); // エラーメッセージをクリア
         navigation.navigate('Home');
       })
       .catch((error) => {
-        // エラー処理
         setErrorMessage(error.message);
       });
   };
 
   return (
     <View style={styles.container}>
-        <>
-          <TextInput
-            placeholder="メールアドレス"
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-          />
-          <TextInput
-            placeholder="パスワード"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            style={styles.input}
-          />
-          <Button
-            title="ログイン"
-            onPress={handleLogin}
-          />
-          </>
-
+      <TextInput
+        placeholder="メールアドレス"
+        value={email}
+        onChangeText={setEmail}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="パスワード"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+        style={styles.input}
+      />
+      <Button
+        title="ログイン"
+        onPress={handleLogin}
+      />
       {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
-
-
       <View style={styles.registerContainer}>
-        <RegisterButton
-          onPress={handleRegister}
-        >
-        <RegisterButtonText>アカウント登録はこちら</RegisterButtonText>
+        <RegisterButton onPress={handleRegister}>
+          <RegisterButtonText>アカウント登録はこちら</RegisterButtonText>
         </RegisterButton>
       </View>
     </View>
@@ -80,39 +69,33 @@ export default function Login({ navigation }: Props) {
 }
 
 const RegisterButton = styled.TouchableOpacity`
-  height: 50;
-  justifyContent: 'center';
-  alignItems: 'center';
-  backgroundColor: 'white';
+  height: 50px;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
 `;
 
 const RegisterButtonText = styled.Text`
-	 text-align: center;
-   color: #007BFF;
-   fontSize: 15;
+  text-align: center;
+  color: #007BFF;
+  font-size: 15px;
 `;
 
 const styles = StyleSheet.create({
   container: {
+		backgroundColor: 'white',
     flex: 1,
     justifyContent: 'center',
     padding: 20,
   },
   input: {
-    height: 50,  // 高さを50にして大きめに
-    width: '100%',  // 幅を画面全体に
+    height: 50,
+    width: '100%',
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 10,
-    fontSize: 16,  // 文字サイズを調整
-  },
-  button: {
-    height: 50,  // ボタンの高さも50に
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#007BFF',  // ボタンの背景色（お好みで変更可能）
-    borderRadius: 5,
+    fontSize: 16,
   },
   error: {
     color: 'red',

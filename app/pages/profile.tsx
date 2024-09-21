@@ -1,21 +1,21 @@
 import { useState, useEffect } from 'react';
 import { auth } from '../(tabs)/firebaseConfig';  // firebase.ts から auth をインポート
-import { onAuthStateChanged } from 'firebase/auth';
-import { View, TextInput, Button, Text, StyleSheet, Image } from 'react-native';
+import { onAuthStateChanged, signOut } from 'firebase/auth'; // signOutをインポート
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
 
-type ProfileeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
+type ProfileScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Profile'>;
 
 interface Props {
-    navigation: ProfileeScreenNavigationProp;
+    navigation: ProfileScreenNavigationProp;
 }
 
 export default function ProfileScreen({ navigation }: Props) {
     const [user, setUser] = useState<any | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-		useEffect(() => {
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUser(user); // ユーザーがログインしている場合、ユーザー情報を保存
@@ -25,19 +25,37 @@ export default function ProfileScreen({ navigation }: Props) {
             }
         });
 
-        return () => unsubscribe(); // クリーンアップ
-    }, []);
+        const focusListener = navigation.addListener('focus', () => {
+            // 必要に応じてデータを再取得したり、表示を更新したりする処理を追加
+            setErrorMessage(null); // エラーメッセージをクリア
+        });
+
+        return () => {
+            unsubscribe(); // クリーンアップ
+            focusListener(); // フォーカスリスナーのクリーンアップ
+        };
+    }, [navigation]);
+
+    const handleLogout = async () => {
+        try {
+					await signOut(auth); // Firebaseからログアウト
+          navigation.navigate('Login'); // ログイン画面に遷移
+        } catch (error) {
+            setErrorMessage(error.message); // エラーメッセージを表示
+        }
+    };
 
     return (
         <View style={styles.container}>
             {user ? (
                 <View style={styles.profile}>
                     <Image
-//                       style={styles.usericon}
-                      source={require('@/assets/images/react-logo.png')}
+                        source={require('@/assets/images/react-logo.png')}
                     />
                     <Text>{user.email} でログインしています</Text>
-                    {/* <Image source={{ uri: user.photoURL }} style={styles.profileimage} /> */}
+                    <TouchableOpacity style={styles.button} onPress={handleLogout}>
+                        <Text style={{ color: 'white' }}>ログアウト</Text>
+                    </TouchableOpacity>
                 </View>
             ) : (
                 <Text>ログインしていません</Text>
@@ -46,7 +64,6 @@ export default function ProfileScreen({ navigation }: Props) {
         </View>
     );
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -63,10 +80,13 @@ const styles = StyleSheet.create({
         color: 'red',
         marginTop: 10,
     },
-    profileimage: {
-        width: 100,
-        height: 100,
-        borderColor: 'red',
-        borderRadius: 30,
-    }
+    button: {
+        height: 50,  // ボタンの高さも50に
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#007BFF',  // ボタンの背景色
+        borderRadius: 5,
+        marginTop: 20, // ボタンの上にスペースを追加
+        width: '100%', // 幅を画面全体に
+    },
 });
