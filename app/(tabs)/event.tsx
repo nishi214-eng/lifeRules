@@ -11,30 +11,16 @@ interface Props {
   };
 }
 
-export default function timeHandle({ navigation }: Props) {
-  const [taskTitle, setTaskTitle] = useState<string>('');
+export default function eventHandle({ navigation }: Props) {
+  const [eventTitle, setEventTitle] = useState<string>('');
+  //const [textBox2, setTextBox2] = useState<string>('');
+  //const [textBox3, setTextBox3] = useState<string>('');
+  //const [textBox4, setTextBox4] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
-
-  const [selectedPriority, setSelectedPriority] = useState<string | null>(null);
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
-
-  type DropdownItem = {
-    key: string;
-    value: string;
-  };
-  const priority = [
-    {title:'a'},
-    {title:'b'},
-    {title:'c'},
-  ];
-  const tag = [
-    {title:'aa'},
-    {title:'bb'},
-    {title:'cc'},
-  ];
+  const [note, setNote] = useState<string>('');
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === 'set' && selectedDate) {
@@ -93,21 +79,19 @@ export default function timeHandle({ navigation }: Props) {
   };
 
   const handleSubmit = async () => {
-    const taskData = {
-      taskTitle,
-      selectedPriority,
+    const eventData = {
+      eventTitle,
       date: date.toISOString(),
       time: time.toISOString(),
-      selectedTag,
     };
     const path = `${FileSystem.documentDirectory}taskData.json`;
     try {
-      await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
+      await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
       console.log('Data saved to', path);
     } catch (error) {
       console.error('Failed to save data:', error);
     }
-    console.log('Task Data:', taskData);
+    console.log('Task Data:', eventData);
 
   };
   
@@ -123,43 +107,12 @@ export default function timeHandle({ navigation }: Props) {
         <TextInput
           placeholder="ここに入力してください"
           mode="outlined"
-          value={taskTitle}
-          onChangeText={setTaskTitle}
+          value={eventTitle}
+          onChangeText={setEventTitle}
           style={styles.textBox}
         />
       </View>
-      
-      {/* importance */}
-      <View style={styles.dropContainer}>
-        <Text style={styles.selectLabel}>
-          重要度
-        </Text>
-        <SelectDropdown
-          data={priority}
-          onSelect={(selectedItem, index) => {
-            setSelectedPriority(selectedItem.title);
-          }}
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || 'Select'}
-                </Text>
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
-        />
-      </View>
+
       {/* date */}      
       <View style={styles.dateContainer}>
         <Text style={styles.dateLabel}>Date:</Text>
@@ -177,6 +130,7 @@ export default function timeHandle({ navigation }: Props) {
         </View>
         )}
       </View>
+
       {/* time */}
       <View style={styles.dateContainer}>
         <Text style={styles.dateLabel}>Time:</Text>
@@ -195,43 +149,23 @@ export default function timeHandle({ navigation }: Props) {
         )}
       </View>
 
-      {/* tag */}
-      <View style={styles.dropContainer}>
-        <Text style={styles.selectLabel}>
-        タスクのタグ
-        </Text>
-        <SelectDropdown
-          data={tag}
-          onSelect={(selectedItem, index) => {
-            setSelectedTag(selectedItem.title);
-          }}
-          renderButton={(selectedItem, isOpened) => {
-            return (
-              <View style={styles.dropdownButtonStyle}>
-                
-                <Text style={styles.dropdownButtonTxtStyle}>
-                  {(selectedItem && selectedItem.title) || 'Select'}
-                </Text>
-              </View>
-            );
-          }}
-          renderItem={(item, index, isSelected) => {
-            return (
-              <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
-                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
-              </View>
-            );
-          }}
-          showsVerticalScrollIndicator={false}
-          dropdownStyle={styles.dropdownMenuStyle}
+      {/* note */}
+      <View style={styles.txtContainer}>
+      <Text style={styles.txtLabel}>タスクのタイトル:</Text>
+        <TextInput
+          placeholder="ここに入力してください"
+          mode="outlined"
+          value={note}
+          onChangeText={setNote}
+          style={styles.textBox}
         />
       </View>
-
       <View style={styles.submitContainer}>
         <Button mode="contained" onPress={handleSubmit} style={styles.submitButton}>
           Submit
         </Button>
       </View>
+      
     </View>
   );
 }
@@ -263,7 +197,7 @@ const styles = StyleSheet.create({
   },
   textBox: {
     marginBottom: 10,
-    flex:1,
+    flex: 1,
   },
   dateContainer: {
     flexDirection: 'row',
