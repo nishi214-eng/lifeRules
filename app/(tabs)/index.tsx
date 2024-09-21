@@ -12,6 +12,8 @@ import * as Notifications from 'expo-notifications';
 import { schedulePushNotification } from '../notifications';
 import { registerForPushNotificationsAsync } from '../notifications';
 import { requestOpenAi } from '@/feature/requestOpenAi';
+import firestore from '@react-native-firebase/firestore';
+import '@react-native-firebase/firestore';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
