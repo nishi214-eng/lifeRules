@@ -1,5 +1,6 @@
 import axios from "axios";
-import { OPENAI_API_KEY } from "@env";
+//import { OPENAI_API_KEY } from '@env';
+const OPENAI_API_KEY = "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"
 
 // openAI APIにHTTPリクエストを送信し、そのレスポンスを取得する関数
 export const requestOpenAi = async (systemPrompt: string, userPrompt: string): Promise<string> => {

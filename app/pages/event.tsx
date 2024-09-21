@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Appearance  } from 'react-native';
+import { View, StyleSheet, Text, Appearance } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import * as FileSystem from 'expo-file-system';
 import { requestOpenAi } from '@/feature/requestOpenAi';
 import { schedulePushNotification } from '../notifications';
-
-//
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../index';  // Import types from index.tsx
+import { RootStackParamList } from '../index';
 
 type EventScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Event'>;
 
@@ -18,14 +16,12 @@ interface Props {
 
 export default function EventHandle({ navigation }: Props) {
   const [eventTitle, setEventTitle] = useState<string>('');
-  //const [textBox2, setTextBox2] = useState<string>('');
-  //const [textBox3, setTextBox3] = useState<string>('');
-  //const [textBox4, setTextBox4] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [note, setNote] = useState<string>('');
+  const [aiResponse, setAiResponse] = useState<string>(''); // State for AI response
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === 'set' && selectedDate) {
@@ -42,85 +38,86 @@ export default function EventHandle({ navigation }: Props) {
   };
 
   const handleDatePress = () => {
-    if (showDatePicker) {
-      // If it's already showing, hide it
-      setShowDatePicker(false);
-    } else {
-      // Show the date picker
-      setShowDatePicker(true);
-    }
-  }
+    setShowDatePicker(!showDatePicker);
+  };
+
   const handleTimePress = () => {
-    if (showTimePicker) {
-      // If it's already showing, hide it
-      setShowTimePicker(false);
-    } else {
-      // Show the date picker
-      setShowTimePicker(true);
-    }
-  }
-  //for reading, not used now.
-  const readData = async () => {
-    const path = `${FileSystem.documentDirectory}taskData.json`;
-    
-    try {
-      // Check if the file exists
-      const fileInfo = await FileSystem.getInfoAsync(path);
-      
-      if (fileInfo.exists) {
-        // Read the file content
-        const fileContents = await FileSystem.readAsStringAsync(path);
-        // Parse the JSON content
-        const parsedData = JSON.parse(fileContents);
-        
-        console.log('Read data:', parsedData);
-        return parsedData; // Return or use the data as needed
-      } else {
-        console.log('File does not exist');
-      }
-    } catch (error) {
-      console.error('Failed to read data:', error);
-    }
+    setShowTimePicker(!showTimePicker);
   };
 
   const handleSubmit = async () => {
     const systemPrompt = "あなたはイベントスケジューラーです。重要度が高いタスクに対する通知文を短文で生成してください";
     let userPrompt = `イベント「${eventTitle}」を通知する通知文を生成してください`;
+    
     try {
+      const generateText = await requestOpenAi(systemPrompt, userPrompt);
+      const generateTextToStr = String(generateText);
+      const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
+      const notificationId = await schedulePushNotification(eventTitle, generateTextToStr, combinedDate);
 
-      const generateText = await requestOpenAi(systemPrompt, userPrompt); // awaitを使用
-      const generateTextToStr = String(generateText); // 生成文をstringに変換
-      const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
-      const notificationId = await schedulePushNotification(eventTitle, generateTextToStr, combinedDate); // 通知を作成
       const path = `${FileSystem.documentDirectory}taskData.json`;
-
       const eventData = {
         eventTitle,
         date: date.toISOString(),
         time: time.toISOString(),
         notificationId
       };
-      try {
-        await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
-        console.log('Data saved to', path);
-        navigation.navigate('Home');
-      } catch (error) {
-        console.error('Failed to save data:', error);
-      }
-      console.log('Task Data:', eventData);
-    }catch (error) {
-      console.error("Error generating text:", error); // エラーハンドリング
-  }
-};
+
+      await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
+      console.log('Data saved to', path);
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error("Error generating text:", error);
+    }
+  };
+
+  const handleGenerateTodoList = async () => {
+    const userPrompt = `イベント「${eventTitle}」に基づいて、タスクのリストを生成してください。各タスクは短いタイトル、締め切り日、締め切り時間、優先度（高、中、低）を含み、最後に追加の説明やアドバイスは不要です。`;
+
+    try {
+      const response = await requestOpenAi("あなたはタスク管理者です。", userPrompt);
+      const generatedResponse = String(response);
+  
+      // Parse AI response into tasks array
+      const tasks = parseAiResponse(generatedResponse);
+  
+      // Log the tasks array to ensure correct structure
+      console.log('Parsed tasks:', tasks);
+  
+      navigation.navigate('AiTask', { tasks });
+    } catch (error) {
+      console.error("Error generating to-do list:", error);
+    }
+  };
+  
+  
+  
+  // Adjust the parse function to handle multiple tasks
+  const parseAiResponse = (response: string) => {
+    const tasks = response.split('\n\n').map(taskBlock => {
+      const lines = taskBlock.split('\n');
+      
+      // Check if lines exist before accessing array elements
+      return {
+        aitask: lines[0] || "No task provided",  // Default text in case of missing info
+        deadlineDate: lines[1] || "No date provided", 
+        deadlineTime: lines[2] || "No time provided", 
+        aipriority: lines[3] || "No priority provided",
+      };
+    });
+  
+    return tasks;
+  };
+  
 
   return (
     <View style={styles.container}>
       <Button mode="text" onPress={() => navigation.navigate('Home')} style={styles.backButton}>
         Back
       </Button>
-      {/* title */}
+
       <View style={styles.txtContainer}>
-      <Text style={styles.txtLabel}>タスクのタイトル:</Text>
+        <Text style={styles.txtLabel}>タスクのタイトル:</Text>
         <TextInput
           placeholder="ここに入力してください"
           mode="outlined"
@@ -130,45 +127,44 @@ export default function EventHandle({ navigation }: Props) {
         />
       </View>
 
-      {/* date */}      
+      {/* Date and Time Pickers */}
       <View style={styles.dateContainer}>
         <Text style={styles.dateLabel}>Date:</Text>
         <Button mode="outlined" onPress={handleDatePress} style={styles.dateButton}>
           {date.toDateString()}
         </Button>
         {showDatePicker && (
-        <View style={styles.pickerContainer}>
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        </View>
+          <View style={styles.pickerContainer}>
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          </View>
         )}
       </View>
 
-      {/* time */}
       <View style={styles.dateContainer}>
         <Text style={styles.dateLabel}>Time:</Text>
         <Button mode="outlined" onPress={handleTimePress} style={styles.dateButton}>
           {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </Button>
         {showTimePicker && (
-        <View style={styles.pickerContainer}>
-          <DateTimePicker
-            value={time}
-            mode="time"
-            display="default"
-            onChange={handleTimeChange}
-          />
-        </View>
+          <View style={styles.pickerContainer}>
+            <DateTimePicker
+              value={time}
+              mode="time"
+              display="default"
+              onChange={handleTimeChange}
+            />
+          </View>
         )}
       </View>
 
-      {/* note */}
+      {/* Note Input */}
       <View style={styles.txtContainer}>
-      <Text style={styles.txtLabel}>タスクのタイトル:</Text>
+        <Text style={styles.txtLabel}>ノート:</Text>
         <TextInput
           placeholder="ここに入力してください"
           mode="outlined"
@@ -177,12 +173,19 @@ export default function EventHandle({ navigation }: Props) {
           style={styles.textBox}
         />
       </View>
+
+      {/* Button to Generate To-Do List */}
+      <View style={styles.submitContainer}>
+        <Button mode="contained" onPress={handleGenerateTodoList} style={styles.submitButton}>
+          Generate To-Do List
+        </Button>
+      </View>
+
       <View style={styles.submitContainer}>
         <Button mode="contained" onPress={handleSubmit} style={styles.submitButton}>
           Submit
         </Button>
       </View>
-      
     </View>
   );
 }

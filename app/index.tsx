@@ -9,8 +9,10 @@ import Login from './pages/login';
 import HomeScreen from './pages/home';
 import TaskHandle from './pages/task';
 import EventHandle from './pages/event';
+import AiTask from './pages/aitask';
 //import Constants from 'expo-constants';
 import { requestOpenAi } from '@/feature/requestOpenAi';
+
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -25,6 +27,14 @@ export type RootStackParamList = {
   Home: undefined;
   Task: undefined;
   Event: undefined;
+  AiTask: { 
+    tasks: { 
+      task: string; 
+      deadlineDate: string; 
+      deadlineTime: string; 
+      priority: string; 
+    }[];  // AiTask now expects an array of tasks
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -65,6 +75,7 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Task" component={TaskHandle} />
         <Stack.Screen name="Event" component={EventHandle} />
+        <Stack.Screen name="AiTask" component={AiTask} />
       </Stack.Navigator>
     </>
   );
