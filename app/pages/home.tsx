@@ -7,6 +7,10 @@ import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
+import { auth } from "@/app/(tabs)/firebaseConfig";
+import { db } from "@/app/(tabs)/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -18,6 +22,7 @@ const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
 
 export default function HomeScreen({ navigation }: Props) {
+
     const [selected, setSelected] = useState(INITIAL_DATE);
     const [state, setState] = React.useState({ open: false });
 
@@ -29,11 +34,10 @@ export default function HomeScreen({ navigation }: Props) {
     const { open } = state;
 
     const handlePress = () => {
-        // タップされたときの処理をここに記述
-        console.log('画像がタップされました');
         // 画面遷移など
         navigation.navigate('Profile'); // 例: Profile画面に遷移
     };
+    const docRef = doc(db, "cities", "SF");
 
 
     return (
