@@ -4,6 +4,7 @@ import { TextInput, Button } from 'react-native-paper';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import SelectDropdown from 'react-native-select-dropdown';
 import * as FileSystem from 'expo-file-system';
+import { schedulePushNotification } from '../notifications';
 
 interface Props {
   navigation: {
@@ -93,12 +94,16 @@ export default function timeHandle({ navigation }: Props) {
   };
 
   const handleSubmit = async () => {
+    // openAI apiで通知文を作成
+    const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
+    const notificationId = await schedulePushNotification(taskTitle,"aaaaa",combinedDate); // 通知を作成
     const taskData = {
       taskTitle,
       selectedPriority,
       date: date.toISOString(),
       time: time.toISOString(),
       selectedTag,
+      notificationId
     };
     const path = `${FileSystem.documentDirectory}taskData.json`;
     try {
@@ -108,7 +113,6 @@ export default function timeHandle({ navigation }: Props) {
       console.error('Failed to save data:', error);
     }
     console.log('Task Data:', taskData);
-
   };
   
 

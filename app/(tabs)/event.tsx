@@ -4,6 +4,7 @@ import { TextInput, Button } from 'react-native-paper';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import SelectDropdown from 'react-native-select-dropdown';
 import * as FileSystem from 'expo-file-system';
+import { schedulePushNotification } from '../notifications';
 
 interface Props {
   navigation: {
@@ -79,6 +80,8 @@ export default function eventHandle({ navigation }: Props) {
   };
 
   const handleSubmit = async () => {
+    const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds());
+    const notificationId = await schedulePushNotification(eventTitle,"aaaaa",combinedDate); // 通知を作成
     const eventData = {
       eventTitle,
       date: date.toISOString(),

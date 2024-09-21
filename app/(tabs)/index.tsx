@@ -57,12 +57,6 @@ export default function App() {
         alignItems: 'center',
         justifyContent: 'space-around',
       }}>
-      <Button
-        title="通知を送信"
-        onPress={async () => {
-          await schedulePushNotification("titleTest","txtTest",endTime); // 通知のタイトル,テキスト,何秒後に送るかを指定
-        }}
-      />
     </View>
   );
 }
