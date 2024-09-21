@@ -81,7 +81,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={Login} />
         <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerLeft: () => null }}/>
         <Stack.Screen name="Task" component={TaskHandle} />
         <Stack.Screen name="Event" component={EventHandle} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
