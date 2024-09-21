@@ -5,23 +5,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
+import { Link } from 'react-router-dom'
 
 const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
-interface Props {
-    navigation: {
-        navigate: () => void;
-    };
-}
-
-export default function HomeScreen({ navigation }: Props) {
+export default function HomeScreen() {
     const [selected, setSelected] = useState(INITIAL_DATE);
     const [state, setState] = React.useState({ open: false });
 
     const handleDayPress = (day: any) => {
         setSelected(day.dateString);
     }
-
     const onStateChange = ({ open }: { open: boolean }) => setState({ open });
     const { open } = state;
 
@@ -56,14 +50,6 @@ export default function HomeScreen({ navigation }: Props) {
             <View style={styles.stepContainer}>
                 <Text style={styles.taskText}>{moment(selected).format("MM月DD日")} のタスク</Text>
             </View>
-            {
-                /*
-                <View style={styles.add_button}>
-                <Button mode="contained" style={styles.submitButton}>
-                    <FontAwesomeIcon style={styles.button_content} size={20} icon={faPlus} />
-                </Button>
-                </View>*/
-            }
             <PaperProvider>
                 <Portal>
                     <FAB.Group
@@ -74,7 +60,7 @@ export default function HomeScreen({ navigation }: Props) {
                             {
                                 icon: 'note',
                                 label: 'タスクを追加',
-                                onPress: () => navigation.navigate('User')
+                                onPress: () => <Link to="/task">タスク追加</Link>
                             },
                             {
                                 icon: 'calendar-today',
