@@ -4,23 +4,42 @@ import { TextInput, Button } from 'react-native-paper';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import SelectDropdown from 'react-native-select-dropdown';
 import * as FileSystem from 'expo-file-system';
+import { schedulePushNotification } from '../notifications';
+import { requestOpenAi } from '@/feature/requestOpenAi';
+
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../index';  // Import types from index.tsx
+
+type TaskScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Task'>;
 
 interface Props {
-  navigation: {
-    goBack: () => void;
-  };
+  navigation: TaskScreenNavigationProp;
 }
 
-export default function eventHandle({ navigation }: Props) {
-  const [eventTitle, setEventTitle] = useState<string>('');
-  //const [textBox2, setTextBox2] = useState<string>('');
-  //const [textBox3, setTextBox3] = useState<string>('');
-  //const [textBox4, setTextBox4] = useState<string>('');
+export default function TimeHandle({ navigation }: Props) {
+  const [taskTitle, setTaskTitle] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
-  const [note, setNote] = useState<string>('');
+
+  const [selectedPriority, setSelectedPriority] = useState<string | null>(null);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+
+  type DropdownItem = {
+    key: string;
+    value: string;
+  };
+  const priority = [
+    {title:'a'},
+    {title:'b'},
+    {title:'c'},
+  ];
+  const tag = [
+    {title:'aa'},
+    {title:'bb'},
+    {title:'cc'},
+  ];
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     if (event.type === 'set' && selectedDate) {
@@ -54,6 +73,39 @@ export default function eventHandle({ navigation }: Props) {
       setShowTimePicker(true);
     }
   }
+  
+
+  const handleSubmit = async () => {
+    const systemPrompt = "あなたはタスクスケジューラーです。重要度が高いタスクに対する通知文を短文で生成してください";
+    let userPrompt = `タスク「${taskTitle}」を通知する通知文を生成してください`;
+    const path = `${FileSystem.documentDirectory}taskData.json`;
+    try {
+        const generateText = await requestOpenAi(systemPrompt, userPrompt); // awaitを使用
+        const generateTextToStr = String(generateText); // 生成文をstringに変換
+        const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
+        const notificationId = await schedulePushNotification(taskTitle, generateTextToStr, combinedDate); // 通知を作成
+        const taskData = {
+          taskTitle,
+          selectedPriority,
+          date: date.toISOString(),
+          time: time.toISOString(),
+          selectedTag,
+          notificationId
+        };
+        
+        try {
+            await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
+            console.log('Data saved to', path);
+            navigation.navigate('Home');
+        } catch (error) {
+            console.error('Failed to save data:', error);
+        }
+        
+        console.log('Task Data:', taskData);
+    } catch (error) {
+        console.error("Error generating text:", error); // エラーハンドリング
+    }
+  };
   //for reading, not used now.
   const readData = async () => {
     const path = `${FileSystem.documentDirectory}taskData.json`;
@@ -78,27 +130,11 @@ export default function eventHandle({ navigation }: Props) {
     }
   };
 
-  const handleSubmit = async () => {
-    const eventData = {
-      eventTitle,
-      date: date.toISOString(),
-      time: time.toISOString(),
-    };
-    const path = `${FileSystem.documentDirectory}taskData.json`;
-    try {
-      await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
-      console.log('Data saved to', path);
-    } catch (error) {
-      console.error('Failed to save data:', error);
-    }
-    console.log('Task Data:', eventData);
-
-  };
   
 
   return (
     <View style={styles.container}>
-      <Button mode="text" onPress={() => navigation.goBack()} style={styles.backButton}>
+      <Button mode="text" onPress={() => navigation.navigate('Home')} style={styles.backButton}>
         Back
       </Button>
       {/* title */}
@@ -107,12 +143,43 @@ export default function eventHandle({ navigation }: Props) {
         <TextInput
           placeholder="ここに入力してください"
           mode="outlined"
-          value={eventTitle}
-          onChangeText={setEventTitle}
+          value={taskTitle}
+          onChangeText={setTaskTitle}
           style={styles.textBox}
         />
       </View>
-
+      
+      {/* importance */}
+      <View style={styles.dropContainer}>
+        <Text style={styles.selectLabel}>
+          重要度
+        </Text>
+        <SelectDropdown
+          data={priority}
+          onSelect={(selectedItem, index) => {
+            setSelectedPriority(selectedItem.title);
+          }}
+          renderButton={(selectedItem, isOpened) => {
+            return (
+              <View style={styles.dropdownButtonStyle}>
+                
+                <Text style={styles.dropdownButtonTxtStyle}>
+                  {(selectedItem && selectedItem.title) || 'Select'}
+                </Text>
+              </View>
+            );
+          }}
+          renderItem={(item, index, isSelected) => {
+            return (
+              <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+              </View>
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+          dropdownStyle={styles.dropdownMenuStyle}
+        />
+      </View>
       {/* date */}      
       <View style={styles.dateContainer}>
         <Text style={styles.dateLabel}>Date:</Text>
@@ -130,7 +197,6 @@ export default function eventHandle({ navigation }: Props) {
         </View>
         )}
       </View>
-
       {/* time */}
       <View style={styles.dateContainer}>
         <Text style={styles.dateLabel}>Time:</Text>
@@ -149,23 +215,43 @@ export default function eventHandle({ navigation }: Props) {
         )}
       </View>
 
-      {/* note */}
-      <View style={styles.txtContainer}>
-      <Text style={styles.txtLabel}>タスクのタイトル:</Text>
-        <TextInput
-          placeholder="ここに入力してください"
-          mode="outlined"
-          value={note}
-          onChangeText={setNote}
-          style={styles.textBox}
+      {/* tag */}
+      <View style={styles.dropContainer}>
+        <Text style={styles.selectLabel}>
+        タスクのタグ
+        </Text>
+        <SelectDropdown
+          data={tag}
+          onSelect={(selectedItem, index) => {
+            setSelectedTag(selectedItem.title);
+          }}
+          renderButton={(selectedItem, isOpened) => {
+            return (
+              <View style={styles.dropdownButtonStyle}>
+                
+                <Text style={styles.dropdownButtonTxtStyle}>
+                  {(selectedItem && selectedItem.title) || 'Select'}
+                </Text>
+              </View>
+            );
+          }}
+          renderItem={(item, index, isSelected) => {
+            return (
+              <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+                <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
+              </View>
+            );
+          }}
+          showsVerticalScrollIndicator={false}
+          dropdownStyle={styles.dropdownMenuStyle}
         />
       </View>
+
       <View style={styles.submitContainer}>
         <Button mode="contained" onPress={handleSubmit} style={styles.submitButton}>
           Submit
         </Button>
       </View>
-      
     </View>
   );
 }
@@ -197,7 +283,7 @@ const styles = StyleSheet.create({
   },
   textBox: {
     marginBottom: 10,
-    flex: 1,
+    flex:1,
   },
   dateContainer: {
     flexDirection: 'row',
