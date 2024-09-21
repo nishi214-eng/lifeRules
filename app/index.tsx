@@ -1,16 +1,19 @@
-//import { Image, StyleSheet, Platform } from 'react-native';
 import { Platform } from 'react-native';
-//import { HelloWave } from '@/components/HelloWave';
-//import ParallaxScrollView from '@/components/ParallaxScrollView';
-//import { ThemedText } from '@/components/ThemedText';
-//import { ThemedView } from '@/components/ThemedView';
 import { useState, useEffect, useRef } from 'react';
-import { Text, View, Button } from 'react-native';
-//import * as Device from 'expo-device';
+import { Button, View } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import { schedulePushNotification } from './notifications';
+import { registerForPushNotificationsAsync } from './notifications';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './pages/login';
+import HomeScreen from './pages/home';
+import TaskHandle from './pages/task';
+import EventHandle from './pages/event';
+import ProfileScreen from './pages/profile';
+
 //import Constants from 'expo-constants';
-import { schedulePushNotification } from '../notifications';
-import { registerForPushNotificationsAsync } from '../notifications';
+import { requestOpenAi } from '@/feature/requestOpenAi';
+
 import { addTask } from '@/feature/uploadFirestore';
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -20,15 +23,24 @@ Notifications.setNotificationHandler({
   }),
 });
 
+export type RootStackParamList = {
+  Login: undefined;
+  Home: undefined;
+  Task: undefined;
+  Event: undefined;
+  Profile: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
 export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [channels, setChannels] = useState<Notifications.NotificationChannel[]>([]);
-  const [notification, setNotification] = useState<Notifications.Notification | undefined>(
-    undefined
-  );
+  const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
   const notificationListener = useRef<Notifications.Subscription>();
   const responseListener = useRef<Notifications.Subscription>();
-  let endTime = new Date();
+  const endTime = new Date();
+
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
     if (Platform.OS === 'android') {
@@ -51,23 +63,16 @@ export default function App() {
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-      }}>
-      <Button
-        title="生成"
-        onPress={async () => {
-          try{
-            await addTask("titleTest","こんにちは","aaaa","aaa","aaa","aaa"); // 通知のタイトル,テキスト,何秒後に送るかを指定
-          }catch(error){
-            console.log(error);
-          }
-          
-        }}
-      />
-    </View>
+    <>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Task" component={TaskHandle} />
+        <Stack.Screen name="Event" component={EventHandle} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+
+      </Stack.Navigator>
+    </>
+
   );
 }

@@ -1,20 +1,28 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image } from 'react-native';
+import { Text, StyleSheet, Dimensions, View, Image, TouchableOpacity } from 'react-native';
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../index';  // Import types from index.tsx
+import { auth } from "@/app/(tabs)/firebaseConfig";
+import { db } from "@/app/(tabs)/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+
+interface Props {
+    navigation: HomeScreenNavigationProp;
+}
 
 const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
-interface Props {
-    navigation: {
-        navigate: () => void;
-    };
-}
 
 export default function HomeScreen({ navigation }: Props) {
+
     const [selected, setSelected] = useState(INITIAL_DATE);
     const [state, setState] = React.useState({ open: false });
 
@@ -25,13 +33,26 @@ export default function HomeScreen({ navigation }: Props) {
     const onStateChange = ({ open }: { open: boolean }) => setState({ open });
     const { open } = state;
 
+    const handlePress = () => {
+        // 画面遷移など
+        navigation.navigate('Profile'); // 例: Profile画面に遷移
+    };
+
+    const deleteTask = () => {
+
+    }
+    const docRef = doc(db, "cities", "SF");
+
+
     return (
         <View style={styles.container}>
-            <Image
-                style={styles.headerImage}
-            />
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText}>LifeRules</Text>
+                <TouchableOpacity onPress={handlePress}>
+                    <Image style={styles.usericon}
+                        source={require('@/assets/images/partial-react-logo.png')}
+                    />
+                </TouchableOpacity>
             </View>
             <View style={{ paddingTop: 3 }}>
                 <Calendar
@@ -53,17 +74,26 @@ export default function HomeScreen({ navigation }: Props) {
                 />
 
             </View>
-            <View style={styles.stepContainer}>
-                <Text style={styles.taskText}>{moment(selected).format("MM月DD日")} のタスク</Text>
+            <View style={{ height: 20 }}></View>
+            <View style={styles.taskbox}>
+                <View style={styles.taskInfo}>
+                    <View style={styles.tasktitlebox}>
+                        <Text style={styles.taskText} numberOfLines={2}>aiueokakikukekosashisusesotachitsuteto</Text>
+                    </View>
+                    <View style={styles.importance}>
+                        <Text style={styles.importanceValue}>重要度: 5</Text>
+                    </View>
+                    <View style={styles.tag}>
+                        <Text >家事</Text>
+                    </View>
+                </View>
+                <View style={styles.taskInfo}>
+                    <Text style={styles.taskstartText}>タスク開始: 2024年9月21日 22:30~</Text>
+                    <Button onPress={deleteTask} style={styles.deleteButton}>
+                        <Text style={styles.completetask}>タスク完了</Text>
+                    </Button>
+                </View>
             </View>
-            {
-                /*
-                <View style={styles.add_button}>
-                <Button mode="contained" style={styles.submitButton}>
-                    <FontAwesomeIcon style={styles.button_content} size={20} icon={faPlus} />
-                </Button>
-                </View>*/
-            }
             <PaperProvider>
                 <Portal>
                     <FAB.Group
@@ -74,12 +104,12 @@ export default function HomeScreen({ navigation }: Props) {
                             {
                                 icon: 'note',
                                 label: 'タスクを追加',
-                                onPress: () => navigation.navigate('User')
+                                onPress: () => navigation.navigate('Task')
                             },
                             {
                                 icon: 'calendar-today',
                                 label: 'イベントを追加',
-                                onPress: () => console.log('Pressed notifications'),
+                                onPress: () => navigation.navigate('Event')
                             },
                         ]}
                         onStateChange={onStateChange}
@@ -99,6 +129,14 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+    },
+
+    usericon: {
+        width: 40,
+        height: 40,
+        backgroundColor: '#eeeeee',
+        marginLeft: 230,
+        borderRadius: 50,
     },
 
     titleContainer: {
@@ -123,8 +161,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
     },
     taskText: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
+    },
+    taskstartText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     add_button: {
         position: "absolute",
@@ -146,7 +189,42 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
     },
-
+    taskbox: {
+        backgroundColor: '#eeeeee',
+        gap: 8,
+        marginBottom: 8,
+        padding: 10,
+        height: 115,
+    },
+    tasktitlebox: {
+        backgroundColor: '#eeeeee',
+        gap: 8,
+        height: 50,
+        width: 270,
+    },
+    taskInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    importance: {
+        marginLeft: 20, // 重要度とタスクの間に少し間隔をあける
+    },
+    tag: {
+        marginLeft: 20, // 重要度とタスクの間に少し間隔をあける
+    },
+    importanceValue: {
+        fontWeight: 'bold', // 重要度を強調する
+    },
+    deleteButton: {
+        backgroundColor: '#DCD0FF',
+        width: 100,
+        height: 40,
+        marginLeft: 50,
+    },
+    completetask: {
+        fontWeight: 'bold',
+        fontSize: 14,
+    }
 });
 
 LocaleConfig.locales.jp = {

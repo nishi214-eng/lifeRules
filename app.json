@@ -1,5 +1,6 @@
 {
   "expo": {
+    "entryPoint": "./app/index.tsx",
     "name": "lifeRules",
     "slug": "lifeRules",
     "version": "1.0.0",
@@ -7,6 +8,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
