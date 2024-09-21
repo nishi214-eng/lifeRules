@@ -6,6 +6,7 @@ import SelectDropdown from 'react-native-select-dropdown';
 import * as FileSystem from 'expo-file-system';
 import { schedulePushNotification } from '../notifications';
 import { requestOpenAi } from '@/feature/requestOpenAi';
+import { addTask } from '@/feature/uploadFirestore';
 
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx

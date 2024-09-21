@@ -10,6 +10,8 @@ import HomeScreen from './pages/home';
 import TaskHandle from './pages/task';
 import EventHandle from './pages/event';
 //import Constants from 'expo-constants';
+import { schedulePushNotification } from '../notifications';
+import { registerForPushNotificationsAsync } from '../notifications';
 import { requestOpenAi } from '@/feature/requestOpenAi';
 
 Notifications.setNotificationHandler({
@@ -59,13 +61,18 @@ export default function App() {
   }, []);
 
   return (
-    <>
-      <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Task" component={TaskHandle} />
-        <Stack.Screen name="Event" component={EventHandle} />
-      </Stack.Navigator>
-    </>
+    <View
+      style={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-around',
+      }}>
+      <Button
+        title="生成"
+        onPress={async () => {
+          await requestOpenAi("titleTest","こんにちは"); // 通知のタイトル,テキスト,何秒後に送るかを指定
+        }}
+      />
+    </View>
   );
 }
