@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { auth } from '../(tabs)/firebaseConfig';  // firebase.ts から auth をインポート
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import { View, TextInput, Button, Text, StyleSheet, Image } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
@@ -12,54 +12,41 @@ interface Props {
 }
 
 export default function ProfileScreen({ navigation }: Props) {
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [user, setUser] = useState<any | null>(null);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const handleLogin = () => {
-        // Firebase Authenticationを使ってユーザーをログイン
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // ログイン成功時の処理
-                const user = userCredential.user;
-                console.log('User logged in:', user);
-                setUser(user); // ログイン成功時にユーザー情報を保存
+		useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user); // ユーザーがログインしている場合、ユーザー情報を保存
                 setErrorMessage(null); // エラーメッセージをクリア
-                navigation.navigate('Home');
-            })
-            .catch((error) => {
-                // エラー処理
-                setErrorMessage(error.message);
-            });
-    };
+            } else {
+                setUser(null); // ユーザーがログアウトしている場合
+            }
+        });
+
+        return () => unsubscribe(); // クリーンアップ
+    }, []);
 
     return (
         <View style={styles.container}>
             {user ? (
-                <Text>{user.email} でログインしています</Text>
+                <View style={styles.profile}>
+                    <Image
+//                       style={styles.usericon}
+                      source={require('@/assets/images/react-logo.png')}
+                    />
+                    <Text>{user.email} でログインしています</Text>
+                    {/* <Image source={{ uri: user.photoURL }} style={styles.profileimage} /> */}
+                </View>
             ) : (
-                <>
-                    <TextInput
-                        placeholder="メールアドレス"
-                        value={email}
-                        onChangeText={setEmail}
-                        style={styles.input}
-                    />
-                    <TextInput
-                        placeholder="パスワード"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                        style={styles.input}
-                    />
-                </>
+                <Text>ログインしていません</Text>
             )}
-
             {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -67,23 +54,14 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 20,
     },
-    input: {
-        height: 40,
-        borderColor: 'gray',
-        borderWidth: 1,
-        marginBottom: 12,
-        paddingHorizontal: 10,
+    profile: {
+        flex: 0,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     error: {
         color: 'red',
         marginTop: 10,
-    },
-    profile: {
-        flex: 1,
-        alignItems: 'center',
-        marginTop: 300,
-        marginLeft: "35%",
-        justifyContent: 'space-around',
     },
     profileimage: {
         width: 100,

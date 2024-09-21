@@ -86,7 +86,7 @@ export default function HomeScreen({ navigation }: Props) {
                 <Text style={styles.titleText}>LifeRules</Text>
                 <TouchableOpacity onPress={handlePress}>
                     <Image style={styles.usericon}
-                        source={require('@/assets/images/partial-react-logo.png')}
+                        source={require('@/assets/images/react-logo.png')}
                     />
                 </TouchableOpacity>
             </View>

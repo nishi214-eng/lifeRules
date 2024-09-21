@@ -45,9 +45,6 @@ export default function Login({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      {user ? (
-        <Text>{user.email} でログインしています</Text>
-      ) : (
         <>
           <TextInput
             placeholder="メールアドレス"
@@ -67,7 +64,6 @@ export default function Login({ navigation }: Props) {
             onPress={handleLogin}
           />
           </>
-      )}
 
       {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
 
