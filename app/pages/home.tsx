@@ -37,6 +37,10 @@ export default function HomeScreen({ navigation }: Props) {
         // 画面遷移など
         navigation.navigate('Profile'); // 例: Profile画面に遷移
     };
+
+    const deleteTask = () => {
+
+    }
     const docRef = doc(db, "cities", "SF");
 
 
@@ -83,7 +87,12 @@ export default function HomeScreen({ navigation }: Props) {
                         <Text >家事</Text>
                     </View>
                 </View>
-                <Text style={styles.taskstartText}>タスク開始: 2024年9月21日 22:30~</Text>
+                <View style={styles.taskInfo}>
+                    <Text style={styles.taskstartText}>タスク開始: 2024年9月21日 22:30~</Text>
+                    <Button onPress={deleteTask} style={styles.deleteButton}>
+                        <Text style={styles.completetask}>タスク完了</Text>
+                    </Button>
+                </View>
             </View>
             <PaperProvider>
                 <Portal>
@@ -185,12 +194,12 @@ const styles = StyleSheet.create({
         gap: 8,
         marginBottom: 8,
         padding: 10,
-        height: 100,
+        height: 115,
     },
     tasktitlebox: {
         backgroundColor: '#eeeeee',
         gap: 8,
-        height: 60,
+        height: 50,
         width: 270,
     },
     taskInfo: {
@@ -206,7 +215,16 @@ const styles = StyleSheet.create({
     importanceValue: {
         fontWeight: 'bold', // 重要度を強調する
     },
-
+    deleteButton: {
+        backgroundColor: '#DCD0FF',
+        width: 100,
+        height: 40,
+        marginLeft: 50,
+    },
+    completetask: {
+        fontWeight: 'bold',
+        fontSize: 14,
+    }
 });
 
 LocaleConfig.locales.jp = {
