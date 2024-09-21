@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.3",
+    "@expo/webpack-config": "^0.12.52",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-brands-svg-icons": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
@@ -32,6 +33,7 @@
     "@react-native-vector-icons/fontawesome": "^4.7.0-alpha.25",
     "@react-navigation/native": "^6.0.2",
     "@react-navigation/native-stack": "^6.11.0",
+    "@types/styled-components-react-native": "^5.2.5",
     "axios": "^1.7.7",
     "expo": "~51.0.28",
     "expo-constants": "~16.0.2",
@@ -59,7 +61,8 @@
     "react-native-select-dropdown": "^4.0.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.10",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "styled-components": "^6.1.13"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

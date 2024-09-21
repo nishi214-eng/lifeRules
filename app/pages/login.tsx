@@ -1,3 +1,4 @@
+import styled from 'styled-components/native';
 import { useState } from 'react';
 import { auth } from '../(tabs)/firebaseConfig';  // firebase.ts から auth をインポート
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -20,6 +21,10 @@ export default function Login({ navigation }: Props) {
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [user, setUser] = useState<any | null>(null);
+
+  const handleRegister = () => {
+      navigation.navigate('Register');
+  }
 
   const handleLogin = () => {
     // Firebase Authenticationを使ってユーザーをログイン
@@ -57,14 +62,39 @@ export default function Login({ navigation }: Props) {
             secureTextEntry
             style={styles.input}
           />
-          <Button title="ログイン" onPress={handleLogin} />
-        </>
+          <Button
+            title="ログイン"
+            onPress={handleLogin}
+          />
+          </>
       )}
 
       {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
+
+
+      <View style={styles.registerContainer}>
+        <RegisterButton
+          onPress={handleRegister}
+        >
+        <RegisterButtonText>アカウント登録はこちら</RegisterButtonText>
+        </RegisterButton>
+      </View>
     </View>
   );
 }
+
+const RegisterButton = styled.TouchableOpacity`
+  height: 50;
+  justifyContent: 'center';
+  alignItems: 'center';
+  backgroundColor: 'white';
+`;
+
+const RegisterButtonText = styled.Text`
+	 text-align: center;
+   color: #007BFF;
+   fontSize: 15;
+`;
 
 const styles = StyleSheet.create({
   container: {
@@ -73,14 +103,29 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   input: {
-    height: 40,
+    height: 50,  // 高さを50にして大きめに
+    width: '100%',  // 幅を画面全体に
     borderColor: 'gray',
     borderWidth: 1,
     marginBottom: 12,
     paddingHorizontal: 10,
+    fontSize: 16,  // 文字サイズを調整
+  },
+  button: {
+    height: 50,  // ボタンの高さも50に
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#007BFF',  // ボタンの背景色（お好みで変更可能）
+    borderRadius: 5,
   },
   error: {
     color: 'red',
     marginTop: 10,
+  },
+  registerContainer: {
+    position: 'absolute',
+    bottom: 280,
+    left: 20,
+    right: 20,
   },
 });
