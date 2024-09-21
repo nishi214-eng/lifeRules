@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text, Appearance  } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import SelectDropdown from 'react-native-select-dropdown';
 import * as FileSystem from 'expo-file-system';
+import { requestOpenAi } from '@/feature/requestOpenAi';
+import { schedulePushNotification } from '../notifications';
 
 interface Props {
   navigation: {
@@ -79,22 +80,33 @@ export default function eventHandle({ navigation }: Props) {
   };
 
   const handleSubmit = async () => {
-    const eventData = {
-      eventTitle,
-      date: date.toISOString(),
-      time: time.toISOString(),
-    };
-    const path = `${FileSystem.documentDirectory}taskData.json`;
+    const systemPrompt = "あなたはイベントスケジューラーです。重要度が高いタスクに対する通知文を短文で生成してください";
+    let userPrompt = `イベント「${eventTitle}」を通知する通知文を生成してください`;
     try {
-      await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
-      console.log('Data saved to', path);
-    } catch (error) {
-      console.error('Failed to save data:', error);
-    }
-    console.log('Task Data:', eventData);
 
-  };
-  
+      const generateText = await requestOpenAi(systemPrompt, userPrompt); // awaitを使用
+      const generateTextToStr = String(generateText); // 生成文をstringに変換
+      const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
+      const notificationId = await schedulePushNotification(eventTitle, generateTextToStr, combinedDate); // 通知を作成
+      const path = `${FileSystem.documentDirectory}taskData.json`;
+
+      const eventData = {
+        eventTitle,
+        date: date.toISOString(),
+        time: time.toISOString(),
+        notificationId
+      };
+      try {
+        await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
+        console.log('Data saved to', path);
+      } catch (error) {
+        console.error('Failed to save data:', error);
+      }
+      console.log('Task Data:', eventData);
+    }catch (error) {
+      console.error("Error generating text:", error); // エラーハンドリング
+  }
+};
 
   return (
     <View style={styles.container}>
