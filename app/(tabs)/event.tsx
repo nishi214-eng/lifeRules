@@ -160,10 +160,12 @@ export default function eventHandle({ navigation }: Props) {
           style={styles.textBox}
         />
       </View>
-
-      <Button mode="contained" onPress={handleSubmit} style={styles.submitButton}>
-        Submit
-      </Button>
+      <View style={styles.submitContainer}>
+        <Button mode="contained" onPress={handleSubmit} style={styles.submitButton}>
+          Submit
+        </Button>
+      </View>
+      
     </View>
   );
 }
@@ -275,6 +277,11 @@ const styles = StyleSheet.create({
     fontSize: 28,
     marginRight: 8,
     color: colorScheme === 'dark' ? '#FFFFFF' : '#000', // Adjust icon color
+  },
+  submitContainer:{
+    flex:1,
+    justifyContent: 'flex-end',
+    paddingBottom: 50,
   },
   submitButton: {
     alignItems: 'center',
