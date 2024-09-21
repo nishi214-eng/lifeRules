@@ -72,24 +72,6 @@ export default function App() {
         <Stack.Screen name="Profile" component={ProfileScreen} />
 
       </Stack.Navigator>
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'space-around',
-        }}>
-        <Button
-          title="生成"
-          onPress={async () => {
-            try {
-              await addTask("titleTest", "こんにちは", "aaaa", "aaa", "aaa", "aaa"); // 通知のタイトル,テキスト,何秒後に送るかを指定
-            } catch (error) {
-              console.log(error);
-            }
-
-          }}
-        />
-      </View>
     </>
 
   );
