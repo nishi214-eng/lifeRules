@@ -49,6 +49,7 @@ export default function Register({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: {
+		backgroundColor: 'white',
     flex: 1,
     justifyContent: 'center',
     padding: 20,
