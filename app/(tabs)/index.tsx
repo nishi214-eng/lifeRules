@@ -31,7 +31,6 @@ export default function App() {
   let endTime = new Date();
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
-
     if (Platform.OS === 'android') {
       Notifications.getNotificationChannelsAsync().then(value => setChannels(value ?? []));
     }
