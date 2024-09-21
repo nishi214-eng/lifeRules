@@ -21,7 +21,6 @@ export const requestOpenAi = async (systemPrompt: string, userPrompt: string): P
             },
         });
 
-        alert(response.data.choices[0].message.content);
         return response.data.choices[0].message.content; // レスポンスの内容を返す
     } catch (error) {
         console.error("Error fetching response from OpenAI:", error);

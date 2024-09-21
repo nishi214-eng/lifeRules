@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image } from 'react-native';
+import { Text, StyleSheet, Dimensions, View, Image, TouchableOpacity,ScrollView } from 'react-native';
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -7,17 +7,44 @@ import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
+import { auth } from "@/app/(tabs)/firebaseConfig";
+import { db } from "@/app/(tabs)/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect } from "react";
+import { getTaskData } from "@/feature/getFirestore";
+import { getEventsData } from "@/feature/getFirestore";
+import { ViewTask } from "@/components/ViewTaskEvents";
+import { ViewEvent } from "@/components/ViewTaskEvents";
+
+
+interface Task {
+    id: string,
+    taskTitle: string;
+    date: string;
+    time: string;
+    notificationId: string;
+    selectedPriority: string | null;
+    selectedTag: string | null;
+}
+interface Event {
+    id: string,
+    eventTitle:string,
+    date:string,
+    time:string,
+    notificationId:string
+}
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 interface Props {
-  navigation: HomeScreenNavigationProp;
+    navigation: HomeScreenNavigationProp;
 }
 
 const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
 
 export default function HomeScreen({ navigation }: Props) {
+
     const [selected, setSelected] = useState(INITIAL_DATE);
     const [state, setState] = React.useState({ open: false });
 
@@ -28,13 +55,40 @@ export default function HomeScreen({ navigation }: Props) {
     const onStateChange = ({ open }: { open: boolean }) => setState({ open });
     const { open } = state;
 
+    const handlePress = () => {
+        // タップされたときの処理をここに記述
+        // 画面遷移など
+        navigation.navigate('Profile'); // 例: Profile画面に遷移
+    };
+
+    const [tasks, setTasks] = useState<Task[]>([]); // タスクデータのstate
+    useEffect(() => {
+        const fetchTasks = async () => {
+          const data = await getTaskData();
+          setTasks(data);
+        };
+        
+        fetchTasks();
+    }, []);
+
+    const [events, setEvents] = useState<Event[]>([]); // eventデータのstate
+    useEffect(() => {
+        const fetchEvents = async () => {
+          const data = await getEventsData();
+          setEvents(data);
+        };
+        
+        fetchEvents();
+    }, []);
     return (
         <View style={styles.container}>
-            <Image
-                style={styles.headerImage}
-            />
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText}>LifeRules</Text>
+                <TouchableOpacity onPress={handlePress}>
+                    <Image style={styles.usericon}
+                        source={require('@/assets/images/partial-react-logo.png')}
+                    />
+                </TouchableOpacity>
             </View>
             <View style={{ paddingTop: 3 }}>
                 <Calendar
@@ -56,17 +110,22 @@ export default function HomeScreen({ navigation }: Props) {
                 />
 
             </View>
-            <View style={styles.stepContainer}>
-                <Text style={styles.taskText}>{moment(selected).format("MM月DD日")} のタスク</Text>
-            </View>
-            {
-                /*
-                <View style={styles.add_button}>
-                <Button mode="contained" style={styles.submitButton}>
-                    <FontAwesomeIcon style={styles.button_content} size={20} icon={faPlus} />
-                </Button>
-                </View>*/
-            }
+            <View style={{ height: 20 }}></View>
+            <ScrollView>
+                <View style={styles.container}>
+                    {/* タスクを表示 */}
+                    {tasks.map(task => (
+                        <ViewTask task={task} />
+                    ))}
+
+                    {/* イベントを表示（同様にタスクとして扱う場合） */}
+                    {events.map(event => (
+                        <ViewEvent event={event} />
+                    ))}
+                </View>
+            </ScrollView>
+            
+
             <PaperProvider>
                 <Portal>
                     <FAB.Group
@@ -104,6 +163,14 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
 
+    usericon: {
+        width: 40,
+        height: 40,
+        backgroundColor: '#eeeeee',
+        marginLeft: 230,
+        borderRadius: 50,
+    },
+
     titleContainer: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -126,8 +193,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
     },
     taskText: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
+    },
+    taskstartText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     add_button: {
         position: "absolute",
@@ -149,7 +221,42 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
     },
-
+    taskbox: {
+        backgroundColor: '#eeeeee',
+        gap: 8,
+        marginBottom: 8,
+        padding: 10,
+        height: 115,
+    },
+    tasktitlebox: {
+        backgroundColor: '#eeeeee',
+        gap: 8,
+        height: 50,
+        width: 270,
+    },
+    taskInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    importance: {
+        marginLeft: 20, // 重要度とタスクの間に少し間隔をあける
+    },
+    tag: {
+        marginLeft: 20, // 重要度とタスクの間に少し間隔をあける
+    },
+    importanceValue: {
+        fontWeight: 'bold', // 重要度を強調する
+    },
+    deleteButton: {
+        backgroundColor: '#DCD0FF',
+        width: 100,
+        height: 40,
+        marginLeft: 50,
+    },
+    completetask: {
+        fontWeight: 'bold',
+        fontSize: 14,
+    }
 });
 
 LocaleConfig.locales.jp = {
