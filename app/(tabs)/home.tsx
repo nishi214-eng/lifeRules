@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image } from 'react-native';
+import { Text, StyleSheet, Dimensions, View, Image, Button } from 'react-native';
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import moment from "moment";
+
 const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
 export default function HomeScreen() {
@@ -43,9 +44,11 @@ export default function HomeScreen() {
             <View style={styles.stepContainer}>
                 <Text style={styles.taskText}>{moment(selected).format("MM月DD日")} のタスク</Text>
             </View>
-            <View style={styles.add_button}>
-                <FontAwesomeIcon style={styles.button_content} size={50} icon={faPlus} />
-            </View>
+            {
+                <View style={styles.add_button}>
+                    <FontAwesomeIcon style={styles.button_content} size={50} icon={faPlus} />
+                </View>
+            }
 
         </View>
     );
