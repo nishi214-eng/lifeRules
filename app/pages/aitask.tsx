@@ -16,7 +16,7 @@ interface Props {
 
 
 
-export default function AiTask({ route }: Props) {
+export default function AiTask({ route, navigation }: Props) {
   const { tasks } = route.params;
 //  console.log('Parsed tasks:', tasks);
   const [checkedItems, setCheckedItems] = useState<boolean[]>(Array(tasks.length).fill(false));
@@ -53,9 +53,10 @@ export default function AiTask({ route }: Props) {
     console.log('Saved JSON:', json);
   
     try {
-      const fileUri = `${FileSystem.documentDirectory}aiTasks.json`;
+      const fileUri = `${FileSystem.documentDirectory}aiTasks.json`; // *******PATH!!!*********
       await FileSystem.writeAsStringAsync(fileUri, json);
       alert('Checked tasks saved successfully!');
+      navigation.navigate('Home');
     } catch (error) {
       console.error('Error saving file:', error);
       alert('Failed to save checked tasks.');

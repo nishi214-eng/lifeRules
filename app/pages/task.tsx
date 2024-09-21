@@ -32,11 +32,9 @@ export default function TimeHandle({ navigation }: Props) {
     value: string;
   };
   const priority = [
-    { title: 1 },
-    { title: 2 },
-    { title: 3 },
-    { title: 4 },
-    { title: 5 },
+    { title: '低' },
+    { title: '中' },
+    { title: '高' },
   ];
   const tag = [
     { title: '会社' },
@@ -331,7 +329,7 @@ const styles = StyleSheet.create({
     color: colorScheme === 'dark' ? '#FFFFFF' : '#000', // Adjust text color
   },
   dropdownButtonStyle: {
-    width: 100,
+    width: 200,
     height: 50,
     backgroundColor: colorScheme === 'dark' ? '#333333' : '#E9ECEF', // Adjust background color
     borderRadius: 12,

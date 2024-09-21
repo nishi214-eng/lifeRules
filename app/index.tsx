@@ -85,7 +85,6 @@ export default function App() {
         <Stack.Screen name="Task" component={TaskHandle} />
         <Stack.Screen name="Event" component={EventHandle} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
-
         <Stack.Screen name="AiTask" component={AiTask} />
       </Stack.Navigator>
     </>
