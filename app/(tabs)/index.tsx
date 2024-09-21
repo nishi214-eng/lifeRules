@@ -11,6 +11,7 @@ import * as Notifications from 'expo-notifications';
 //import Constants from 'expo-constants';
 import { schedulePushNotification } from '../notifications';
 import { registerForPushNotificationsAsync } from '../notifications';
+import { requestOpenAi } from '@/feature/requestOpenAi';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -58,9 +59,9 @@ export default function App() {
         justifyContent: 'space-around',
       }}>
       <Button
-        title="通知を送信"
+        title="生成"
         onPress={async () => {
-          await schedulePushNotification("titleTest","txtTest",endTime); // 通知のタイトル,テキスト,何秒後に送るかを指定
+          await requestOpenAi("titleTest","こんにちは"); // 通知のタイトル,テキスト,何秒後に送るかを指定
         }}
       />
     </View>
