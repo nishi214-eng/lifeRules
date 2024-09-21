@@ -9,6 +9,8 @@ import Login from './pages/login';
 import HomeScreen from './pages/home';
 import TaskHandle from './pages/task';
 import EventHandle from './pages/event';
+//import Constants from 'expo-constants';
+import { requestOpenAi } from '@/feature/requestOpenAi';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
