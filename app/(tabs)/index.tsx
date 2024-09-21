@@ -11,10 +11,7 @@ import * as Notifications from 'expo-notifications';
 //import Constants from 'expo-constants';
 import { schedulePushNotification } from '../notifications';
 import { registerForPushNotificationsAsync } from '../notifications';
-import { requestOpenAi } from '@/feature/requestOpenAi';
-import firestore from '@react-native-firebase/firestore';
-import '@react-native-firebase/firestore';
-
+import { addTask } from '@/feature/uploadFirestore';
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -63,7 +60,12 @@ export default function App() {
       <Button
         title="生成"
         onPress={async () => {
-          await requestOpenAi("titleTest","こんにちは"); // 通知のタイトル,テキスト,何秒後に送るかを指定
+          try{
+            await addTask("titleTest","こんにちは","aaaa","aaa","aaa","aaa"); // 通知のタイトル,テキスト,何秒後に送るかを指定
+          }catch(error){
+            console.log(error);
+          }
+          
         }}
       />
     </View>

@@ -1,14 +1,17 @@
-import firestore from '@react-native-firebase/firestore';
 import { auth } from '@/app/(tabs)/firebaseConfig';
+import { db } from '@/app/(tabs)/firebaseConfig';
+import firestore from '@react-native-firebase/firestore';
+
 export const addTask = async (
   taskTitle:string,
   dete:string,
   time:string,
-  notificationId?:string,
-  selectedPriority?:string,
-  selectedTag?:string
+  notificationId:string,
+  selectedPriority:string | null,
+  selectedTag:string | null
 ) => {
-    let uid = auth.uid
+    let uid = auth.currentUser?.uid;
+    console.log(uid);
     await firestore().collection('task').doc(uid).set({
       taskTitle: taskTitle,
       selectedPriority: selectedPriority,
@@ -18,7 +21,6 @@ export const addTask = async (
       notificationId:notificationId
     });
 };
-  
 
 export const addEvent = async (
   eventTitle:string,
@@ -26,8 +28,8 @@ export const addEvent = async (
   time:string,
   notificationId:string
 ) => {
-  let uid = auth.uid
-  await firestore().collection('event').doc(uid).set({
+  let uid = auth.currentUser?.uid;
+  await firestore().collection('task').doc(uid).set({
       eventTitle: eventTitle,
       dete: dete,
       time: time,

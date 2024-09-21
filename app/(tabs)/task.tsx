@@ -103,9 +103,8 @@ export default function timeHandle({ navigation }: Props) {
         const generateText = await requestOpenAi(systemPrompt, userPrompt); // awaitを使用
         const generateTextToStr = String(generateText); // 生成文をstringに変換
         const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
-        //const notificationId = await schedulePushNotification(taskTitle, generateTextToStr, combinedDate); // 通知を作成
-        //let notId = String(notificationId);
-        let notId:string = "aaa"
+        const notificationId = await schedulePushNotification(taskTitle, generateTextToStr, combinedDate); // 通知を作成
+        let notId = String(notificationId);
         const taskData = {
           taskTitle,
           selectedPriority,
