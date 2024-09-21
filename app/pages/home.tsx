@@ -7,6 +7,9 @@ import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
+import { auth } from "@/app/(tabs)/firebaseConfig";
+import { db } from "@/app/(tabs)/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import { getTaskData } from "@/feature/getFirestore";
 import { getEventsData } from "@/feature/getFirestore";
@@ -39,6 +42,7 @@ const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
 
 export default function HomeScreen({ navigation }: Props) {
+
     const [selected, setSelected] = useState(INITIAL_DATE);
     const [state, setState] = React.useState({ open: false });
 
@@ -54,6 +58,11 @@ export default function HomeScreen({ navigation }: Props) {
         // 画面遷移など
         navigation.navigate('Profile'); // 例: Profile画面に遷移
     };
+
+    const deleteTask = () => {
+
+    }
+
     const [tasks, setTasks] = useState<Task[]>([]); // タスクデータのstate
     useEffect(() => {
         const fetchTasks = async () => {
@@ -219,12 +228,12 @@ const styles = StyleSheet.create({
         gap: 8,
         marginBottom: 8,
         padding: 10,
-        height: 100,
+        height: 115,
     },
     tasktitlebox: {
         backgroundColor: '#eeeeee',
         gap: 8,
-        height: 60,
+        height: 50,
         width: 270,
     },
     taskInfo: {
@@ -240,7 +249,16 @@ const styles = StyleSheet.create({
     importanceValue: {
         fontWeight: 'bold', // 重要度を強調する
     },
-
+    deleteButton: {
+        backgroundColor: '#DCD0FF',
+        width: 100,
+        height: 40,
+        marginLeft: 50,
+    },
+    completetask: {
+        fontWeight: 'bold',
+        fontSize: 14,
+    }
 });
 
 LocaleConfig.locales.jp = {
