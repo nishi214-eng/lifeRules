@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Appearance  } from 'react-native';
+import { View, StyleSheet, Text, Appearance } from 'react-native';
 import { TextInput, Button } from 'react-native-paper';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import SelectDropdown from 'react-native-select-dropdown';
@@ -31,14 +31,19 @@ export default function TimeHandle({ navigation }: Props) {
     value: string;
   };
   const priority = [
-    {title:'a'},
-    {title:'b'},
-    {title:'c'},
+    { title: 1 },
+    { title: 2 },
+    { title: 3 },
+    { title: 4 },
+    { title: 5 },
   ];
   const tag = [
-    {title:'aa'},
-    {title:'bb'},
-    {title:'cc'},
+    { title: '会社' },
+    { title: '家事' },
+    { title: '子育て' },
+    { title: 'パート・アルバイト' },
+    { title: '学校' },
+    { title: 'その他' },
   ];
 
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
@@ -76,17 +81,17 @@ export default function TimeHandle({ navigation }: Props) {
   //for reading, not used now.
   const readData = async () => {
     const path = `${FileSystem.documentDirectory}taskData.json`;
-    
+
     try {
       // Check if the file exists
       const fileInfo = await FileSystem.getInfoAsync(path);
-      
+
       if (fileInfo.exists) {
         // Read the file content
         const fileContents = await FileSystem.readAsStringAsync(path);
         // Parse the JSON content
         const parsedData = JSON.parse(fileContents);
-        
+
         console.log('Read data:', parsedData);
         return parsedData; // Return or use the data as needed
       } else {
@@ -102,34 +107,34 @@ export default function TimeHandle({ navigation }: Props) {
     let userPrompt = `タスク「${taskTitle}」を通知する通知文を生成してください`;
     const path = `${FileSystem.documentDirectory}taskData.json`;
     try {
-        const generateText = await requestOpenAi(systemPrompt, userPrompt); // awaitを使用
-        const generateTextToStr = String(generateText); // 生成文をstringに変換
-        const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
-        const notificationId = await schedulePushNotification(taskTitle, generateTextToStr, combinedDate); // 通知を作成
-        const taskData = {
-          taskTitle,
-          selectedPriority,
-          date: date.toISOString(),
-          time: time.toISOString(),
-          selectedTag,
-          notificationId
-        };
-        
-        try {
-            await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
-            console.log('Data saved to', path);
-            navigation.navigate('Home');
-        } catch (error) {
-            console.error('Failed to save data:', error);
-        }
-        
-        console.log('Task Data:', taskData);
-    } catch (error) {
-        console.error("Error generating text:", error); // エラーハンドリング
-    }
-};
+      const generateText = await requestOpenAi(systemPrompt, userPrompt); // awaitを使用
+      const generateTextToStr = String(generateText); // 生成文をstringに変換
+      const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
+      const notificationId = await schedulePushNotification(taskTitle, generateTextToStr, combinedDate); // 通知を作成
+      const taskData = {
+        taskTitle,
+        selectedPriority,
+        date: date.toISOString(),
+        time: time.toISOString(),
+        selectedTag,
+        notificationId
+      };
 
-  
+      try {
+        await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
+        console.log('Data saved to', path);
+        navigation.navigate('Home');
+      } catch (error) {
+        console.error('Failed to save data:', error);
+      }
+
+      console.log('Task Data:', taskData);
+    } catch (error) {
+      console.error("Error generating text:", error); // エラーハンドリング
+    }
+  };
+
+
 
   return (
     <View style={styles.container}>
@@ -138,7 +143,7 @@ export default function TimeHandle({ navigation }: Props) {
       </Button>
       {/* title */}
       <View style={styles.txtContainer}>
-      <Text style={styles.txtLabel}>タスクのタイトル:</Text>
+        <Text style={styles.txtLabel}>タスクのタイトル:</Text>
         <TextInput
           placeholder="ここに入力してください"
           mode="outlined"
@@ -147,7 +152,7 @@ export default function TimeHandle({ navigation }: Props) {
           style={styles.textBox}
         />
       </View>
-      
+
       {/* importance */}
       <View style={styles.dropContainer}>
         <Text style={styles.selectLabel}>
@@ -161,7 +166,7 @@ export default function TimeHandle({ navigation }: Props) {
           renderButton={(selectedItem, isOpened) => {
             return (
               <View style={styles.dropdownButtonStyle}>
-                
+
                 <Text style={styles.dropdownButtonTxtStyle}>
                   {(selectedItem && selectedItem.title) || 'Select'}
                 </Text>
@@ -170,7 +175,7 @@ export default function TimeHandle({ navigation }: Props) {
           }}
           renderItem={(item, index, isSelected) => {
             return (
-              <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+              <View style={{ ...styles.dropdownItemStyle, ...(isSelected && { backgroundColor: '#D2D9DF' }) }}>
                 <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
               </View>
             );
@@ -179,21 +184,21 @@ export default function TimeHandle({ navigation }: Props) {
           dropdownStyle={styles.dropdownMenuStyle}
         />
       </View>
-      {/* date */}      
+      {/* date */}
       <View style={styles.dateContainer}>
         <Text style={styles.dateLabel}>Date:</Text>
         <Button mode="outlined" onPress={handleDatePress} style={styles.dateButton}>
           {date.toDateString()}
         </Button>
         {showDatePicker && (
-        <View style={styles.pickerContainer}>
-          <DateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={handleDateChange}
-          />
-        </View>
+          <View style={styles.pickerContainer}>
+            <DateTimePicker
+              value={date}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+            />
+          </View>
         )}
       </View>
       {/* time */}
@@ -203,21 +208,21 @@ export default function TimeHandle({ navigation }: Props) {
           {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </Button>
         {showTimePicker && (
-        <View style={styles.pickerContainer}>
-          <DateTimePicker
-            value={time}
-            mode="time"
-            display="default"
-            onChange={handleTimeChange}
-          />
-        </View>
+          <View style={styles.pickerContainer}>
+            <DateTimePicker
+              value={time}
+              mode="time"
+              display="default"
+              onChange={handleTimeChange}
+            />
+          </View>
         )}
       </View>
 
       {/* tag */}
       <View style={styles.dropContainer}>
         <Text style={styles.selectLabel}>
-        タスクのタグ
+          タスクのタグ
         </Text>
         <SelectDropdown
           data={tag}
@@ -227,7 +232,7 @@ export default function TimeHandle({ navigation }: Props) {
           renderButton={(selectedItem, isOpened) => {
             return (
               <View style={styles.dropdownButtonStyle}>
-                
+
                 <Text style={styles.dropdownButtonTxtStyle}>
                   {(selectedItem && selectedItem.title) || 'Select'}
                 </Text>
@@ -236,7 +241,7 @@ export default function TimeHandle({ navigation }: Props) {
           }}
           renderItem={(item, index, isSelected) => {
             return (
-              <View style={{...styles.dropdownItemStyle, ...(isSelected && {backgroundColor: '#D2D9DF'})}}>
+              <View style={{ ...styles.dropdownItemStyle, ...(isSelected && { backgroundColor: '#D2D9DF' }) }}>
                 <Text style={styles.dropdownItemTxtStyle}>{item.title}</Text>
               </View>
             );
@@ -268,12 +273,12 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     marginBottom: 10,
   },
-  txtContainer:{
+  txtContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
   },
-  txtLabel:{
+  txtLabel: {
     marginRight: 10,
     fontSize: 16,
     lineHeight: 40,
@@ -282,7 +287,7 @@ const styles = StyleSheet.create({
   },
   textBox: {
     marginBottom: 10,
-    flex:1,
+    flex: 1,
   },
   dateContainer: {
     flexDirection: 'row',
@@ -363,8 +368,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
     color: colorScheme === 'dark' ? '#FFFFFF' : '#000', // Adjust icon color
   },
-  submitContainer:{
-    flex:1,
+  submitContainer: {
+    flex: 1,
     justifyContent: 'flex-end',
     paddingBottom: 50,
   },

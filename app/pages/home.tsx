@@ -11,7 +11,7 @@ import { RootStackParamList } from '../index';  // Import types from index.tsx
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 interface Props {
-  navigation: HomeScreenNavigationProp;
+    navigation: HomeScreenNavigationProp;
 }
 
 const INITIAL_DATE = moment().format("YYYY-MM-DD");
@@ -30,9 +30,6 @@ export default function HomeScreen({ navigation }: Props) {
 
     return (
         <View style={styles.container}>
-            <Image
-                style={styles.headerImage}
-            />
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText}>LifeRules</Text>
             </View>
@@ -56,17 +53,21 @@ export default function HomeScreen({ navigation }: Props) {
                 />
 
             </View>
-            <View style={styles.stepContainer}>
-                <Text style={styles.taskText}>{moment(selected).format("MM月DD日")} のタスク</Text>
+            <View style={{ height: 20 }}></View>
+            <View style={styles.taskbox}>
+                <View style={styles.taskInfo}>
+                    <View style={styles.tasktitlebox}>
+                        <Text style={styles.taskText} numberOfLines={2}>aiueokakikukekosashisusesotachitsuteto</Text>
+                    </View>
+                    <View style={styles.importance}>
+                        <Text style={styles.importanceValue}>重要度: 5</Text>
+                    </View>
+                    <View style={styles.tag}>
+                        <Text >家事</Text>
+                    </View>
+                </View>
+                <Text style={styles.taskstartText}>タスク開始: 2024年9月21日 22:30~</Text>
             </View>
-            {
-                /*
-                <View style={styles.add_button}>
-                <Button mode="contained" style={styles.submitButton}>
-                    <FontAwesomeIcon style={styles.button_content} size={20} icon={faPlus} />
-                </Button>
-                </View>*/
-            }
             <PaperProvider>
                 <Portal>
                     <FAB.Group
@@ -126,8 +127,13 @@ const styles = StyleSheet.create({
         backgroundColor: '#ccc',
     },
     taskText: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: 'bold',
+    },
+    taskstartText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
     add_button: {
         position: "absolute",
@@ -148,6 +154,32 @@ const styles = StyleSheet.create({
         backgroundColor: 'aqua',
         width: 60,
         height: 60,
+    },
+    taskbox: {
+        backgroundColor: '#eeeeee',
+        gap: 8,
+        marginBottom: 8,
+        padding: 10,
+        height: 100,
+    },
+    tasktitlebox: {
+        backgroundColor: '#eeeeee',
+        gap: 8,
+        height: 60,
+        width: 270,
+    },
+    taskInfo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    importance: {
+        marginLeft: 20, // 重要度とタスクの間に少し間隔をあける
+    },
+    tag: {
+        marginLeft: 20, // 重要度とタスクの間に少し間隔をあける
+    },
+    importanceValue: {
+        fontWeight: 'bold', // 重要度を強調する
     },
 
 });
