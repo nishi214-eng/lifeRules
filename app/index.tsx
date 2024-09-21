@@ -9,6 +9,8 @@ import Login from './pages/login';
 import HomeScreen from './pages/home';
 import TaskHandle from './pages/task';
 import EventHandle from './pages/event';
+import ProfileScreen from './pages/profile';
+
 //import Constants from 'expo-constants';
 import { requestOpenAi } from '@/feature/requestOpenAi';
 
@@ -25,6 +27,7 @@ export type RootStackParamList = {
   Home: undefined;
   Task: undefined;
   Event: undefined;
+  Profile: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -65,6 +68,8 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Task" component={TaskHandle} />
         <Stack.Screen name="Event" component={EventHandle} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+
       </Stack.Navigator>
     </>
   );

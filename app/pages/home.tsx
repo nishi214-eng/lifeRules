@@ -32,6 +32,8 @@ export default function HomeScreen({ navigation }: Props) {
         <View style={styles.container}>
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText}>LifeRules</Text>
+                <Image style={styles.usericon}
+                />
             </View>
             <View style={{ paddingTop: 3 }}>
                 <Calendar
@@ -103,6 +105,16 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+    },
+
+    usericon: {
+        padding: 3,
+        width: 50,
+        height: 50,
+        position: 'absolute',
+        backgroundColor: '#eeeeee',
+        marginLeft: 340,
+        borderRadius: 50,
     },
 
     titleContainer: {
