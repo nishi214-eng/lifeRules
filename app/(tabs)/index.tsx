@@ -11,6 +11,13 @@ import * as Notifications from 'expo-notifications';
 //import Constants from 'expo-constants';
 import { schedulePushNotification } from '../notifications';
 import { registerForPushNotificationsAsync } from '../notifications';
+import 'react-native-gesture-handler';
+import React from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Login from './login';
+import HomeScreen from './home';
+import TaskHandle from './task';
+import EventHandle from './event';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -19,8 +26,25 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+export type RootStackParamList = {
+  Login: undefined;
+  Home: undefined;
+  Task: undefined;
+  Event: undefined;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  return (
+    <Stack.Navigator initialRouteName="Login">
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Task" component={TaskHandle} />
+      <Stack.Screen name="Event" component={EventHandle} />
+    </Stack.Navigator>
+  );
+  
   const [expoPushToken, setExpoPushToken] = useState('');
   const [channels, setChannels] = useState<Notifications.NotificationChannel[]>([]);
   const [notification, setNotification] = useState<Notifications.Notification | undefined>(
@@ -49,6 +73,7 @@ export default function App() {
         Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
+
 
   return (
     <View

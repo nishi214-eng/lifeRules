@@ -3,7 +3,19 @@ import { auth } from './firebaseConfig';  // firebase.ts から auth をイン�
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
 
-export default function Login() {
+//
+import React from 'react';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from './index';  // Import types from index.tsx
+
+type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+
+interface Props {
+  navigation: LoginScreenNavigationProp;
+}
+
+
+export default function Login({ navigation }: Props) {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -18,6 +30,7 @@ export default function Login() {
         console.log('User logged in:', user);
         setUser(user); // ログイン成功時にユーザー情報を保存
         setErrorMessage(null); // エラーメッセージをクリア
+        navigation.navigate('Home');
       })
       .catch((error) => {
         // エラー処理

@@ -5,13 +5,16 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import SelectDropdown from 'react-native-select-dropdown';
 import * as FileSystem from 'expo-file-system';
 
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from './index';  // Import types from index.tsx
+
+type TaskScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Task'>;
+
 interface Props {
-  navigation: {
-    goBack: () => void;
-  };
+  navigation: TaskScreenNavigationProp;
 }
 
-export default function timeHandle({ navigation }: Props) {
+export default function TimeHandle({ navigation }: Props) {
   const [taskTitle, setTaskTitle] = useState<string>('');
   const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState<Date>(new Date());
@@ -104,6 +107,7 @@ export default function timeHandle({ navigation }: Props) {
     try {
       await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
       console.log('Data saved to', path);
+      navigation.navigate('Home');
     } catch (error) {
       console.error('Failed to save data:', error);
     }
@@ -114,7 +118,7 @@ export default function timeHandle({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Button mode="text" onPress={() => navigation.goBack()} style={styles.backButton}>
+      <Button mode="text" onPress={() => navigation.navigate('Home')} style={styles.backButton}>
         Back
       </Button>
       {/* title */}

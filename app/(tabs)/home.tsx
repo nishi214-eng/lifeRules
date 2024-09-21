@@ -5,14 +5,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from './index';  // Import types from index.tsx
+
+type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
+
+interface Props {
+  navigation: HomeScreenNavigationProp;
+}
 
 const INITIAL_DATE = moment().format("YYYY-MM-DD");
 
-interface Props {
-    navigation: {
-        navigate: () => void;
-    };
-}
 
 export default function HomeScreen({ navigation }: Props) {
     const [selected, setSelected] = useState(INITIAL_DATE);
@@ -74,12 +77,12 @@ export default function HomeScreen({ navigation }: Props) {
                             {
                                 icon: 'note',
                                 label: 'タスクを追加',
-                                onPress: () => navigation.navigate('User')
+                                onPress: () => navigation.navigate('Task')
                             },
                             {
                                 icon: 'calendar-today',
                                 label: 'イベントを追加',
-                                onPress: () => console.log('Pressed notifications'),
+                                onPress: () => navigation.navigate('Event')
                             },
                         ]}
                         onStateChange={onStateChange}
