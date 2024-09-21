@@ -4,6 +4,7 @@ import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 
 // プッシュ通知を予約する関数。引数：通知のタイトル,通知のテキスト,通知を送る日付と時刻
+// todo：タスクが作成された際にこの関数を呼び出し、ローカルDBに返り値のnotificationIdを保存するように更新
 export const schedulePushNotification = async (
     notificationTitle:string,
     notificationTxt:string,
@@ -20,18 +21,23 @@ export const schedulePushNotification = async (
         },
         trigger: {seconds:sendTime},
       });
+      alert(notificationId);
       return notificationId; // 通知を識別するid リターン先でローカルdbに保存
     }catch(error){
       console.log(error);
     }
 }
-export const cancelPushNotification = async (notificationId:string) => {
+
+// 通知をキャンセルする関数。引数：通知のid
+// todo：タスクの完了・削除時にこの関数を実行。成功したらローカルDBから通知のidを削除するように更新
+export const cancelPushNotification = async (notificationId:string) => { // ローカルDBに保存されている通知のidを渡す
   try{
     await Notifications.cancelScheduledNotificationAsync(notificationId);
   }catch(error){
     console.log(error);
   }
 }
+
 
 export async function registerForPushNotificationsAsync() {
     let token;
