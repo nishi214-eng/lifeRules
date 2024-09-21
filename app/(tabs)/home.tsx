@@ -60,7 +60,7 @@ export default function HomeScreen() {
                             {
                                 icon: 'note',
                                 label: 'タスクを追加',
-                                onPress: () => <Link to="/task">タスク追加</Link>
+                                onPress: () => <Link to="/task"></Link>,
                             },
                             {
                                 icon: 'calendar-today',
