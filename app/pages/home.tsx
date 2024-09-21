@@ -7,6 +7,17 @@ import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../index';  // Import types from index.tsx
+import { useEffect } from "react";
+import { getTaskData } from "@/feature/getFirestore";
+import { getEventsData } from "@/feature/getFirestore";
+interface Task {
+    taskTitle: string;
+    date: string;
+    time: string;
+    notificationId: string;
+    selectedPriority: string | null;
+    selectedTag: string | null;
+}
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
@@ -34,8 +45,25 @@ export default function HomeScreen({ navigation }: Props) {
         // 画面遷移など
         navigation.navigate('Profile'); // 例: Profile画面に遷移
     };
+    const [tasks, setTasks] = useState<Task[]>([]); // タスクデータのstate
+    useEffect(() => {
+        const fetchTasks = async () => {
+          const data = await getTaskData();
+          setTasks(data);
+        };
+        
+        fetchTasks();
+    }, []);
 
-
+    const [events, setEvents] = useState<Task[]>([]); // eventデータのstate
+    useEffect(() => {
+        const fetchEvents = async () => {
+          const data = await getEventsData();
+          setEvents(data);
+        };
+        
+        fetchEvents();
+    }, []);
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
