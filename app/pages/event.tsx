@@ -71,8 +71,18 @@ export default function EventHandle({ navigation }: Props) {
     }
   };
 
+  const getCurrentISOTime = () => {
+    const currentTime = new Date();
+    return currentTime.toISOString();
+    
+  };
+  
+  
+  
+
   const handleGenerateTodoList = async () => {
-    const userPrompt = `イベント「${eventTitle}」に基づいて、タスクのリストを生成してください。各タスクは短いタイトル、締め切り日、締め切り時間、優先度（高、中、低）を含み、最後に追加の説明やアドバイスは不要です。`;
+    console.log('Data saved to', getCurrentISOTime());
+    const userPrompt = `今は${getCurrentISOTime()}です．${date}，${time}にあるイベント「${eventTitle}」に基づいて、タスクのリストを生成してください。各タスクは以下の形式で出力してください：\n\nタスクのタイトル\nYYYY-MM-DD\nHH:MM\n高、中、低\n\n追加の文字，説明やアドバイスは不要です。タスクのタイトルの前には追加の文字（」「タスクのタイトル」のような文字列）は不要です．タイトルは日本語で出す`;
 
     try {
       const response = await requestOpenAi("あなたはタスク管理者です。", userPrompt);
@@ -89,9 +99,47 @@ export default function EventHandle({ navigation }: Props) {
       console.error("Error generating to-do list:", error);
     }
   };
+  type Task = {
+    aitask: string;
+    deadlineDate: string; // ISO format
+    deadlineTime: string; // HH:mm format
+    aipriority: string;
+  };
+
+
+  
+  
+  const parseAiResponse = (response: string): Task[] => {
+    const taskBlocks = response.split('\n\n');
+    console.log("Task Blocks:", taskBlocks); // Log the task blocks
+  
+    const tasks: Task[] = taskBlocks.map((taskBlock) => {
+      console.log("Task Block:", taskBlock); // Log each task block
+  
+      const lines = taskBlock.split('\n');
+      if (lines.length >= 4) {
+        return {
+          aitask: lines[0]?.replace('タスク名: ', '').trim() || "No task provided",
+          deadlineDate: lines[1]?.trim() || "No date provided",
+          deadlineTime: lines[2]?.trim() || "No time provided",
+          aipriority: lines[3]?.trim() || "No priority provided",
+        };
+      }
+      return {
+        aitask: "No task provided",
+        deadlineDate: "No date provided",
+        deadlineTime: "No time provided",
+        aipriority: "No priority provided",
+      };
+    });
+  
+    return tasks.filter(task => task.aitask !== "No task provided");
+  };
   
   
   
+  
+  {/*)
   // Adjust the parse function to handle multiple tasks
   const parseAiResponse = (response: string) => {
     const tasks = response.split('\n\n').map(taskBlock => {
@@ -107,7 +155,7 @@ export default function EventHandle({ navigation }: Props) {
     });
   
     return tasks;
-  };
+  };*/}
   
 
   return (

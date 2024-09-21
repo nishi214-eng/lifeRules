@@ -26,12 +26,32 @@ export default function AiTask({ route }: Props) {
     updatedCheckedItems[index] = !updatedCheckedItems[index];
     setCheckedItems(updatedCheckedItems);
   };
+
+  
   const saveCheckedTasks = async () => {
     const checkedTasks = tasks.filter((_, index) => checkedItems[index]);
-
-    const json = JSON.stringify(checkedTasks, null, 2); // Convert to JSON with formatting
+  
+    // Convert dates and times to ISO format
+    const formattedTasks = checkedTasks.map(task => {
+      const [year, month, day] = task.deadlineDate.split('-');
+      const [hours, minutes] = task.deadlineTime.split(':');
+  
+      // Create a new Date object with UTC
+      const deadline = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes)));
+  
+      return {
+        ...task,
+        deadlineDate: deadline.toISOString(), // Full date in ISO format
+        deadlineTime: deadline.toISOString()//.split('T')[1] // Just the time part in ISO format
+      };
+    });
+  
+    // Log the formatted tasks to verify the output
+    console.log('Formatted Tasks:', formattedTasks);
+  
+    const json = JSON.stringify(formattedTasks, null, 2); // Convert to JSON with formatting
     console.log('Saved JSON:', json);
-
+  
     try {
       const fileUri = `${FileSystem.documentDirectory}aiTasks.json`;
       await FileSystem.writeAsStringAsync(fileUri, json);
@@ -41,6 +61,8 @@ export default function AiTask({ route }: Props) {
       alert('Failed to save checked tasks.');
     }
   };
+  
+  
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
