@@ -10,8 +10,17 @@ import { RootStackParamList } from '../index';  // Import types from index.tsx
 import { auth } from "@/app/(tabs)/firebaseConfig";
 import { db } from "@/app/(tabs)/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-
-
+import { useEffect } from "react";
+import { getTaskData } from "@/feature/getFirestore";
+import { getEventsData } from "@/feature/getFirestore";
+interface Task {
+    taskTitle: string;
+    date: string;
+    time: string;
+    notificationId: string;
+    selectedPriority: string | null;
+    selectedTag: string | null;
+}
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 interface Props {
@@ -41,9 +50,26 @@ export default function HomeScreen({ navigation }: Props) {
     const deleteTask = () => {
 
     }
-    const docRef = doc(db, "cities", "SF");
 
+    const [tasks, setTasks] = useState<Task[]>([]); // タスクデータのstate
+    useEffect(() => {
+        const fetchTasks = async () => {
+          const data = await getTaskData();
+          setTasks(data);
+        };
+        
+        fetchTasks();
+    }, []);
 
+    const [events, setEvents] = useState<Task[]>([]); // eventデータのstate
+    useEffect(() => {
+        const fetchEvents = async () => {
+          const data = await getEventsData();
+          setEvents(data);
+        };
+        
+        fetchEvents();
+    }, []);
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
