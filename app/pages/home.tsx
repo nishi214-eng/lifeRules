@@ -18,6 +18,7 @@ import { ViewEvent } from "@/components/ViewTaskEvents";
 
 
 interface Task {
+    id: string,
     taskTitle: string;
     date: string;
     time: string;
@@ -26,6 +27,7 @@ interface Task {
     selectedTag: string | null;
 }
 interface Event {
+    id: string,
     eventTitle:string,
     date:string,
     time:string,
@@ -58,10 +60,6 @@ export default function HomeScreen({ navigation }: Props) {
         // 画面遷移など
         navigation.navigate('Profile'); // 例: Profile画面に遷移
     };
-
-    const deleteTask = () => {
-
-    }
 
     const [tasks, setTasks] = useState<Task[]>([]); // タスクデータのstate
     useEffect(() => {
