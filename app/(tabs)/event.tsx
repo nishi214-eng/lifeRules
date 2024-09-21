@@ -88,6 +88,7 @@ export default function eventHandle({ navigation }: Props) {
       const generateTextToStr = String(generateText); // 生成文をstringに変換
       const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
       const notificationId = await schedulePushNotification(eventTitle, generateTextToStr, combinedDate); // 通知を作成
+      const path = `${FileSystem.documentDirectory}taskData.json`;
 
       const eventData = {
         eventTitle,
@@ -95,7 +96,6 @@ export default function eventHandle({ navigation }: Props) {
         time: time.toISOString(),
         notificationId
       };
-      const path = `${FileSystem.documentDirectory}taskData.json`;
       try {
         await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
         console.log('Data saved to', path);

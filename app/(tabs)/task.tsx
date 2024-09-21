@@ -97,22 +97,21 @@ export default function timeHandle({ navigation }: Props) {
   const handleSubmit = async () => {
     const systemPrompt = "あなたはタスクスケジューラーです。重要度が高いタスクに対する通知文を短文で生成してください";
     let userPrompt = `タスク「${taskTitle}」を通知する通知文を生成してください`;
-    
+    const path = `${FileSystem.documentDirectory}taskData.json`;
     try {
         const generateText = await requestOpenAi(systemPrompt, userPrompt); // awaitを使用
         const generateTextToStr = String(generateText); // 生成文をstringに変換
         const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
         const notificationId = await schedulePushNotification(taskTitle, generateTextToStr, combinedDate); // 通知を作成
         const taskData = {
-            taskTitle,
-            selectedPriority,
-            date: date.toISOString(),
-            time: time.toISOString(),
-            selectedTag,
-            notificationId
+          taskTitle,
+          selectedPriority,
+          date: date.toISOString(),
+          time: time.toISOString(),
+          selectedTag,
+          notificationId
         };
         
-        const path = `${FileSystem.documentDirectory}taskData.json`;
         try {
             await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
             console.log('Data saved to', path);
