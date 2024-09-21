@@ -7,7 +7,7 @@ import * as FileSystem from 'expo-file-system';
 
 //
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from './index';  // Import types from index.tsx
+import { RootStackParamList } from '../index';  // Import types from index.tsx
 
 type EventScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Event'>;
 

@@ -6,7 +6,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FAB, Portal, PaperProvider, Button } from 'react-native-paper';
 import moment from "moment";
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from './index';  // Import types from index.tsx
+import { RootStackParamList } from '../index';  // Import types from index.tsx
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 

@@ -27,7 +27,7 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {{/*
+export default function App() {
   const [expoPushToken, setExpoPushToken] = useState('');
   const [channels, setChannels] = useState<Notifications.NotificationChannel[]>([]);
   const [notification, setNotification] = useState<Notifications.Notification | undefined>(undefined);
@@ -54,7 +54,7 @@ export default function App() {{/*
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
     };
-  }, []);*/}
+  }, []);
 
   return (
     <>

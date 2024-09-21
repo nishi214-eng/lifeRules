@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { auth } from './firebaseConfig';  // firebase.ts から auth をインポート
+import { auth } from '../(tabs)/firebaseConfig';  // firebase.ts から auth をインポート
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
 
 //
 import React from 'react';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from './index';  // Import types from index.tsx
+import { RootStackParamList } from '../index';  // Import types from index.tsx
 
 type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
 
