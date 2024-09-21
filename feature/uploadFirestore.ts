@@ -1,6 +1,6 @@
 import { auth } from "@/app/(tabs)/firebaseConfig";
 import { db } from "@/app/(tabs)/firebaseConfig";
-import { doc, setDoc,addDoc,collection } from 'firebase/firestore';
+import { doc, setDoc, addDoc, collection } from 'firebase/firestore';
 
 // Firestoreにユーザーごとのコレクションを作成してタスクを追加する関数
 export const addTask = async (
@@ -36,10 +36,10 @@ export const addTask = async (
 
 
 export const addEvent = async (
-  eventTitle:string,
-  dete:string,
-  time:string,
-  notificationId:string
+  eventTitle: string,
+  dete: string,
+  time: string,
+  notificationId: string
 ) => {
   // ユーザーのuidを取得
   const uid = auth.currentUser?.uid;
@@ -53,7 +53,7 @@ export const addEvent = async (
       eventTitle: eventTitle,
       dete: dete,
       time: time,
-      notificationId:notificationId
+      notificationId: notificationId
     });
     console.log('Task successfully added with UID: ', docRef.id);
   } catch (error) {
