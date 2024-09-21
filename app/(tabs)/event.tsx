@@ -5,6 +5,7 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import * as FileSystem from 'expo-file-system';
 import { requestOpenAi } from '@/feature/requestOpenAi';
 import { schedulePushNotification } from '../notifications';
+import { addEvent } from '@/feature/uploadFirestore';
 
 interface Props {
   navigation: {
@@ -89,7 +90,7 @@ export default function eventHandle({ navigation }: Props) {
       const combinedDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds()); // 予定の時刻をセット
       const notificationId = await schedulePushNotification(eventTitle, generateTextToStr, combinedDate); // 通知を作成
       const path = `${FileSystem.documentDirectory}taskData.json`;
-
+      let notId = String(notificationId);
       const eventData = {
         eventTitle,
         date: date.toISOString(),
@@ -97,8 +98,17 @@ export default function eventHandle({ navigation }: Props) {
         notificationId
       };
       try {
-        await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
-        console.log('Data saved to', path);
+        alert("test");
+        if(notId){
+          await addEvent(
+            eventData.eventTitle,
+            eventData.date,
+            eventData.time,
+            notId,
+        );
+          await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));
+          console.log('Data saved to', path);
+        }
       } catch (error) {
         console.error('Failed to save data:', error);
       }

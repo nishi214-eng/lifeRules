@@ -13,7 +13,6 @@ export const schedulePushNotification = async (
     let endTime = sendDate.getTime();// タスクの終了時刻をミリ秒形式に変換
     let nowTime = new Date().getTime(); // 端末の現在時刻を取得しミリ秒に変換
     let sendTime = (endTime - nowTime) / 1000 + 4; // 終了時間-現在時刻を秒単位に変換
-    alert(sendTime);
     try{
       const notificationId:string = await Notifications.scheduleNotificationAsync({
         content: {
