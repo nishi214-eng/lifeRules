@@ -59,6 +59,8 @@ export default function Login({ navigation }: Props) {
         onPress={handleLogin}
       />
       {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
+      {/* ログインボタンと登録ボタンの間に5%のスペースを追加 */}
+      <View style={styles.spaceBetween} />
       <View style={styles.registerContainer}>
         <RegisterButton onPress={handleRegister}>
           <RegisterButtonText>アカウント登録はこちら</RegisterButtonText>
@@ -102,9 +104,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   registerContainer: {
-    position: 'absolute',
-    bottom: 280,
-    left: 20,
-    right: 20,
+    alignItems: 'center', 
+  },
+  spaceBetween: {
+    height: '5%', // ログインボタンと登録ボタンの間に画面の5%分の高さのスペースを追加
   },
 });
