@@ -79,29 +79,6 @@ export default function TimeHandle({ navigation }: Props) {
       setShowTimePicker(true);
     }
   }
-  //for reading, not used now.
-  const readData = async () => {
-    const path = `${FileSystem.documentDirectory}taskData.json`;
-
-    try {
-      // Check if the file exists
-      const fileInfo = await FileSystem.getInfoAsync(path);
-
-      if (fileInfo.exists) {
-        // Read the file content
-        const fileContents = await FileSystem.readAsStringAsync(path);
-        // Parse the JSON content
-        const parsedData = JSON.parse(fileContents);
-
-        console.log('Read data:', parsedData);
-        return parsedData; // Return or use the data as needed
-      } else {
-        console.log('File does not exist');
-      }
-    } catch (error) {
-      console.error('Failed to read data:', error);
-    }
-  };
 
   const handleSubmit = async () => {
     const systemPrompt = "あなたはタスクスケジューラーです。重要度が高いタスクに対する通知文を短文で生成してください";
@@ -141,6 +118,30 @@ export default function TimeHandle({ navigation }: Props) {
       console.log('Task Data:', taskData);
     } catch (error) {
       console.error("Error generating text:", error); // エラーハンドリング
+    }
+  };
+
+  //for reading, not used now.
+  const readData = async () => {
+    const path = `${FileSystem.documentDirectory}taskData.json`;
+    
+    try {
+      // Check if the file exists
+      const fileInfo = await FileSystem.getInfoAsync(path);
+      
+      if (fileInfo.exists) {
+        // Read the file content
+        const fileContents = await FileSystem.readAsStringAsync(path);
+        // Parse the JSON content
+        const parsedData = JSON.parse(fileContents);
+        
+        console.log('Read data:', parsedData);
+        return parsedData; // Return or use the data as needed
+      } else {
+        console.log('File does not exist');
+      }
+    } catch (error) {
+      console.error('Failed to read data:', error);
     }
   };
 
