@@ -12,7 +12,53 @@ interface Props {
 }
 
 export default function ProfileScreen({ navigation }: Props) {
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [user, setUser] = useState<any | null>(null);
 
+    const handleLogin = () => {
+        // Firebase Authenticationを使ってユーザーをログイン
+        signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                // ログイン成功時の処理
+                const user = userCredential.user;
+                console.log('User logged in:', user);
+                setUser(user); // ログイン成功時にユーザー情報を保存
+                setErrorMessage(null); // エラーメッセージをクリア
+                navigation.navigate('Home');
+            })
+            .catch((error) => {
+                // エラー処理
+                setErrorMessage(error.message);
+            });
+    };
+
+    return (
+        <View style={styles.container}>
+            {user ? (
+                <Text>{user.email} でログインしています</Text>
+            ) : (
+                <>
+                    <TextInput
+                        placeholder="メールアドレス"
+                        value={email}
+                        onChangeText={setEmail}
+                        style={styles.input}
+                    />
+                    <TextInput
+                        placeholder="パスワード"
+                        value={password}
+                        onChangeText={setPassword}
+                        secureTextEntry
+                        style={styles.input}
+                    />
+                </>
+            )}
+
+            {errorMessage && <Text style={styles.error}>{errorMessage}</Text>}
+        </View>
+    );
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image } from 'react-native';
+import { Text, StyleSheet, Dimensions, View, Image, TouchableOpacity } from 'react-native';
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -28,12 +28,23 @@ export default function HomeScreen({ navigation }: Props) {
     const onStateChange = ({ open }: { open: boolean }) => setState({ open });
     const { open } = state;
 
+    const handlePress = () => {
+        // タップされたときの処理をここに記述
+        console.log('画像がタップされました');
+        // 画面遷移など
+        navigation.navigate('Profile'); // 例: Profile画面に遷移
+    };
+
+
     return (
         <View style={styles.container}>
             <View style={styles.titleContainer}>
                 <Text style={styles.titleText}>LifeRules</Text>
-                <Image style={styles.usericon}
-                />
+                <TouchableOpacity onPress={handlePress}>
+                    <Image style={styles.usericon}
+                        source={require('@/assets/images/partial-react-logo.png')}
+                    />
+                </TouchableOpacity>
             </View>
             <View style={{ paddingTop: 3 }}>
                 <Calendar
@@ -108,12 +119,10 @@ const styles = StyleSheet.create({
     },
 
     usericon: {
-        padding: 3,
-        width: 50,
-        height: 50,
-        position: 'absolute',
+        width: 40,
+        height: 40,
         backgroundColor: '#eeeeee',
-        marginLeft: 340,
+        marginLeft: 230,
         borderRadius: 50,
     },
 
