@@ -80,6 +80,35 @@ interface Task {
         );
     };
 
+    export const ViewFriendTask = ({ task }: { task: Task }) => {
+        return (
+            <>
+                <View style={{ height: 20 }} />
+                <View style={styles.taskbox}>
+                    <View style={styles.taskInfo}>
+                        <View style={styles.tasktitlebox}>
+                            <Text style={styles.taskText} numberOfLines={2}>
+                                {task.taskTitle}
+                            </Text>
+                        </View>
+                        <View style={styles.importance}>
+                            <Text style={styles.importanceValue}>重要度: {task.selectedPriority}</Text>
+                        </View>
+                        <View style={styles.tag}>
+                            <Text>{task.selectedTag}</Text>
+                        </View>
+                    </View>
+                    <Text style={styles.taskstartText}>
+                        タスク開始: {task.date}
+                    </Text>
+                </View>
+                <View style={styles.taskInfo}>
+                    <Text style={styles.taskstartText}>タスク開始: 2024年9月21日 22:30~</Text>
+                </View>
+            </>
+        );
+    };
+
 
     const styles = StyleSheet.create({
         container: {

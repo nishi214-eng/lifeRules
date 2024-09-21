@@ -2,10 +2,13 @@ import { useState } from 'react';
 import { auth } from './firebaseConfig';
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { db } from './firebaseConfig';
+import { addDoc,collection } from 'firebase/firestore';
 
 export default function Register() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [userName, setUserName] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSignUp = () => {
@@ -13,6 +16,9 @@ export default function Register() {
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             const user = userCredential.user;
+            const docRef = addDoc(collection(db, 'users', user.uid, 'name'), {
+              userName:userName
+            });
             console.log('User created:', user);
             setErrorMessage(null);  // エラーメッセージをクリア
           })
@@ -23,6 +29,12 @@ export default function Register() {
 
   return (
     <View style={styles.container}>
+      <TextInput
+        placeholder="ユーザーネーム"
+        value={userName}
+        onChangeText={setUserName}
+        style={styles.input}
+      />
       <TextInput
         placeholder="メールアドレス"
         value={email}

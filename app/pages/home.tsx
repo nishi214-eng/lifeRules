@@ -124,6 +124,13 @@ export default function HomeScreen({ navigation }: Props) {
                     ))}
                 </View>
             </ScrollView>
+            <View>
+                <Button 
+                    onPress={() => navigation.navigate('Group')}
+                >
+                    遷移
+                </Button>
+            </View>
             
 
             <PaperProvider>
