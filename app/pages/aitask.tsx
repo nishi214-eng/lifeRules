@@ -5,6 +5,9 @@ import { RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '../index';
 import Checkbox from 'expo-checkbox';
 import * as FileSystem from 'expo-file-system';
+import { schedulePushNotification } from '../notifications';
+import { addTask } from '@/feature/uploadFirestore';
+import { aiAddTask } from '@/feature/uploadFirestore';
 
 type AiTaskScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'AiTask'>;
 type AiTaskScreenRouteProp = RouteProp<RootStackParamList, 'AiTask'>;
@@ -32,13 +35,21 @@ export default function AiTask({ route, navigation }: Props) {
     const checkedTasks = tasks.filter((_, index) => checkedItems[index]);
   
     // Convert dates and times to ISO format
-    const formattedTasks = checkedTasks.map(task => {
+    const formattedTasks = checkedTasks.map(async task => {
       const [year, month, day] = task.deadlineDate.split('-');
       const [hours, minutes] = task.deadlineTime.split(':');
-  
+      
       // Create a new Date object with UTC
       const deadline = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes)));
-  
+      const notificationId = await schedulePushNotification(task.aipriority,task.aitask,deadline);
+      let notId = String(notificationId);
+      // addTask
+      await aiAddTask(
+        task.aitask,
+        task.deadlineDate,
+        task.deadlineTime,
+        notId
+      )
       return {
         ...task,
         deadlineDate: deadline.toISOString(), // Full date in ISO format
@@ -53,6 +64,7 @@ export default function AiTask({ route, navigation }: Props) {
     console.log('Saved JSON:', json);
   
     try {
+      
       const fileUri = `${FileSystem.documentDirectory}aiTasks.json`; // *******PATH!!!*********
       await FileSystem.writeAsStringAsync(fileUri, json);
       alert('Checked tasks saved successfully!');
