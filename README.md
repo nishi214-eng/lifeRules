@@ -9,7 +9,7 @@ Expo<br>
 FireBase<br>
 OpenAI api<br>
 # ハッカソンでの挑戦
-ハッカソンのチームメンバーに教えていただいた、github の Projects機能によるタスク管理とIssueドリブン開発に挑戦
+ハッカソンのチームメンバーに教えていただいた、github の Projects機能によるタスク管理とIssueドリブン開発に挑戦（Fork元参照）
 # 主な担当
 FireStoreを利用したデータ管理<br>
 openAi apiを利用する関数の作成<br>
