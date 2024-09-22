@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image, TouchableOpacity,ScrollView } from 'react-native';
+import { Text, StyleSheet, Dimensions, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -28,10 +28,10 @@ interface Task {
 }
 interface Event {
     id: string,
-    eventTitle:string,
-    date:string,
-    time:string,
-    notificationId:string
+    eventTitle: string,
+    date: string,
+    time: string,
+    notificationId: string
 }
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -64,20 +64,20 @@ export default function HomeScreen({ navigation }: Props) {
     const [tasks, setTasks] = useState<Task[]>([]); // タスクデータのstate
     useEffect(() => {
         const fetchTasks = async () => {
-          const data = await getTaskData();
-          setTasks(data);
+            const data = await getTaskData();
+            setTasks(data);
         };
-        
+
         fetchTasks();
     }, []);
 
     const [events, setEvents] = useState<Event[]>([]); // eventデータのstate
     useEffect(() => {
         const fetchEvents = async () => {
-          const data = await getEventsData();
-          setEvents(data);
+            const data = await getEventsData();
+            setEvents(data);
         };
-        
+
         fetchEvents();
     }, []);
     return (
@@ -124,8 +124,6 @@ export default function HomeScreen({ navigation }: Props) {
                     ))}
                 </View>
             </ScrollView>
-            
-
             <PaperProvider>
                 <Portal>
                     <FAB.Group
