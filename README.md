@@ -1,8 +1,14 @@
 # 58ハッカソンにて開発 「LifeRules」
 タスク管理Androidアプリ<br>
 2daysハッカソンにて、4人チーム2日間で開発。※本番環境には未マージ<br>
-ハッカソン1日目中間発表にて作成した資料<br>
+# ハッカソン1日目中間発表にて作成した資料<br>
 https://www.canva.com/design/DAGRXhBW_UM/NuUIwtP0Ps1Xz58IIxhH2Q/view?utm_content=DAGRXhBW_UM&utm_campaign=designshare&utm_medium=link&utm_source=editor
+# 成果物
+AIがタスク内容とその重要度を基に通知文を生成→プッシュ通知を送信
+![image](https://github.com/user-attachments/assets/12307937-1d6d-4136-9086-70b2e64d573b)
+Todoリストに予定を追加すると、AIがその予定の実行に必要なタスクを算出(例：ハッカソン→環境構築,実装,発表会)
+<img width="246" alt="image" src="https://github.com/user-attachments/assets/ea22b0b3-d72f-491d-9cdc-9d606e10debc">
+
 # 利用技術
 ・ReactNaive<br>
 ・Expo<br>
