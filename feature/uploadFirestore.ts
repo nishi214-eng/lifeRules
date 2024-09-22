@@ -34,6 +34,34 @@ export const addTask = async (
   }
 };
 
+export const aiAddTask = async (
+  taskTitle: string,
+  date: string,
+  time: string,
+  notificationId: string,
+
+) => {
+  // ユーザーのuidを取得
+  const uid = auth.currentUser?.uid;
+  if (!uid) {
+    console.error('User is not authenticated');
+    return;
+  }
+
+  try {
+    // Firestoreの"users/{uid}/tasks"コレクションに新しいタスクを追加
+    const docRef = await addDoc(collection(db, 'users', uid, 'tasks'), {
+      taskTitle: taskTitle,
+      date: date,
+      time: time,
+      notificationId: notificationId,
+    });
+    alert(`Task successfully added with ID: ${docRef.id}`);
+  } catch (error) {
+    console.error('Error adding task: ', error);
+  }
+};
+
 
 export const addEvent = async (
   eventTitle: string,
@@ -53,7 +81,9 @@ export const addEvent = async (
       eventTitle: eventTitle,
       dete: dete,
       time: time,
-      notificationId: notificationId
+      notificationId: notificationId,
+      selectedPriority: "AI",
+      selectedTag: "AI"
     });
     console.log('Task successfully added with UID: ', docRef.id);
   } catch (error) {

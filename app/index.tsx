@@ -16,6 +16,10 @@ import ProfileScreen from './pages/profile';
 import { requestOpenAi } from '@/feature/requestOpenAi';
 
 import { addTask } from '@/feature/uploadFirestore';
+import AiTask from './pages/aitask';
+//import Constants from 'expo-constants';
+
+
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -26,10 +30,19 @@ Notifications.setNotificationHandler({
 
 export type RootStackParamList = {
   Login: undefined;
+  Register: undefined;
   Home: undefined;
   Task: undefined;
   Event: undefined;
   Profile: undefined;
+  AiTask: { 
+    tasks: { 
+      aitask: string; 
+      deadlineDate: string; 
+      deadlineTime: string; 
+      aipriority: string; 
+    }[];  // AiTask now expects an array of tasks
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -72,6 +85,7 @@ export default function App() {
         <Stack.Screen name="Task" component={TaskHandle} />
         <Stack.Screen name="Event" component={EventHandle} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="AiTask" component={AiTask} />
       </Stack.Navigator>
     </>
 

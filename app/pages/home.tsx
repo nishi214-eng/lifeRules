@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, StyleSheet, Dimensions, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { Text, StyleSheet, Dimensions, View, Image, TouchableOpacity } from 'react-native';
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
@@ -13,12 +13,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect } from "react";
 import { getTaskData } from "@/feature/getFirestore";
 import { getEventsData } from "@/feature/getFirestore";
-import { ViewTask } from "@/components/ViewTaskEvents";
-import { ViewEvent } from "@/components/ViewTaskEvents";
-
-
 interface Task {
-    id: string,
     taskTitle: string;
     date: string;
     time: string;
@@ -26,14 +21,6 @@ interface Task {
     selectedPriority: string | null;
     selectedTag: string | null;
 }
-interface Event {
-    id: string,
-    eventTitle: string,
-    date: string,
-    time: string,
-    notificationId: string
-}
-
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
 
 interface Props {
@@ -56,10 +43,13 @@ export default function HomeScreen({ navigation }: Props) {
     const { open } = state;
 
     const handlePress = () => {
-        // タップされたときの処理をここに記述
         // 画面遷移など
         navigation.navigate('Profile'); // 例: Profile画面に遷移
     };
+
+    const deleteTask = () => {
+
+    }
 
     const [tasks, setTasks] = useState<Task[]>([]); // タスクデータのstate
     useEffect(() => {
@@ -71,7 +61,7 @@ export default function HomeScreen({ navigation }: Props) {
         fetchTasks();
     }, []);
 
-    const [events, setEvents] = useState<Event[]>([]); // eventデータのstate
+    const [events, setEvents] = useState<Task[]>([]); // eventデータのstate
     useEffect(() => {
         const fetchEvents = async () => {
             const data = await getEventsData();
@@ -86,7 +76,7 @@ export default function HomeScreen({ navigation }: Props) {
                 <Text style={styles.titleText}>LifeRules</Text>
                 <TouchableOpacity onPress={handlePress}>
                     <Image style={styles.usericon}
-                        source={require('@/assets/images/react-logo.png')}
+                        source={require('@/assets/images/partial-react-logo.png')}
                     />
                 </TouchableOpacity>
             </View>
@@ -111,19 +101,25 @@ export default function HomeScreen({ navigation }: Props) {
 
             </View>
             <View style={{ height: 20 }}></View>
-            <ScrollView>
-                <View style={styles.container}>
-                    {/* タスクを表示 */}
-                    {tasks.map(task => (
-                        <ViewTask task={task} />
-                    ))}
-
-                    {/* イベントを表示（同様にタスクとして扱う場合） */}
-                    {events.map(event => (
-                        <ViewEvent event={event} />
-                    ))}
+            <View style={styles.taskbox}>
+                <View style={styles.taskInfo}>
+                    <View style={styles.tasktitlebox}>
+                        <Text style={styles.taskText} numberOfLines={2}>aiueokakikukekosashisusesotachitsuteto</Text>
+                    </View>
+                    <View style={styles.importance}>
+                        <Text style={styles.importanceValue}>重要度: 5</Text>
+                    </View>
+                    <View style={styles.tag}>
+                        <Text >家事</Text>
+                    </View>
                 </View>
-            </ScrollView>
+                <View style={styles.taskInfo}>
+                    <Text style={styles.taskstartText}>タスク開始: 2024年9月21日 22:30~</Text>
+                    <Button onPress={deleteTask} style={styles.deleteButton}>
+                        <Text style={styles.completetask}>タスク完了</Text>
+                    </Button>
+                </View>
+            </View>
             <PaperProvider>
                 <Portal>
                     <FAB.Group
