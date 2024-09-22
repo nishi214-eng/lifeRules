@@ -270,7 +270,6 @@ const colorScheme = Appearance.getColorScheme();
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
     padding: 20,
     backgroundColor: colorScheme === 'dark' ? '#121212' : '#FFFFFF', // Adjust background color
   },
@@ -377,10 +376,10 @@ const styles = StyleSheet.create({
   submitContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingBottom: 50,
+    paddingBottom: '100%',
   },
   submitButton: {
     alignItems: 'center',
-    marginTop: 20,
+    marginBottom: '5%',
   },
 });
