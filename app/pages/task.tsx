@@ -148,12 +148,9 @@ export default function TimeHandle({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-      <Button mode="text" onPress={() => navigation.navigate('Home')} style={styles.backButton}>
-        Back
-      </Button>
       {/* title */}
       <View style={styles.txtContainer}>
-        <Text style={styles.txtLabel}>タスクのタイトル:</Text>
+        <Text style={styles.txtLabel}>タイトル:</Text>
         <TextInput
           placeholder="ここに入力してください"
           mode="outlined"
@@ -166,7 +163,7 @@ export default function TimeHandle({ navigation }: Props) {
       {/* importance */}
       <View style={styles.dropContainer}>
         <Text style={styles.selectLabel}>
-          重要度
+          重要度:
         </Text>
         <SelectDropdown
           data={priority}
@@ -196,7 +193,7 @@ export default function TimeHandle({ navigation }: Props) {
       </View>
       {/* date */}
       <View style={styles.dateContainer}>
-        <Text style={styles.dateLabel}>Date:</Text>
+        <Text style={styles.dateLabel}>日付:</Text>
         <Button mode="outlined" onPress={handleDatePress} style={styles.dateButton}>
           {date.toDateString()}
         </Button>
@@ -213,7 +210,7 @@ export default function TimeHandle({ navigation }: Props) {
       </View>
       {/* time */}
       <View style={styles.dateContainer}>
-        <Text style={styles.dateLabel}>Time:</Text>
+        <Text style={styles.dateLabel}>時間:</Text>
         <Button mode="outlined" onPress={handleTimePress} style={styles.dateButton}>
           {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
         </Button>
@@ -232,7 +229,7 @@ export default function TimeHandle({ navigation }: Props) {
       {/* tag */}
       <View style={styles.dropContainer}>
         <Text style={styles.selectLabel}>
-          タスクのタグ
+          タグ:
         </Text>
         <SelectDropdown
           data={tag}
@@ -263,7 +260,7 @@ export default function TimeHandle({ navigation }: Props) {
 
       <View style={styles.submitContainer}>
         <Button mode="contained" onPress={handleSubmit} style={styles.submitButton}>
-          Submit
+          登録
         </Button>
       </View>
     </View>
@@ -275,7 +272,6 @@ const colorScheme = Appearance.getColorScheme();
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 40,
     padding: 20,
     backgroundColor: colorScheme === 'dark' ? '#121212' : '#FFFFFF', // Adjust background color
   },
@@ -289,13 +285,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   txtLabel: {
-    marginRight: 10,
-    fontSize: 16,
+		marginBottom: 8,
+    marginRight: 18,
+    fontSize: 18,
     lineHeight: 40,
-    width: 200,
+    width: 100,
     color: colorScheme === 'dark' ? '#FFFFFF' : '#000', // Adjust text color
   },
   textBox: {
+		width: '100%',
     marginBottom: 10,
     flex: 1,
   },
@@ -318,16 +316,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   dropContainer: {
+		marginRight: 10,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
     alignItems: 'center',
     padding: 20,
   },
   selectLabel: {
-    marginRight: 10,
+		flex: 1,
     fontSize: 18,
-    lineHeight: 40,
-    width: 200,
+    width: 100,
     color: colorScheme === 'dark' ? '#FFFFFF' : '#000', // Adjust text color
   },
   dropdownButtonStyle: {
@@ -381,10 +378,10 @@ const styles = StyleSheet.create({
   submitContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingBottom: 50,
+    paddingBottom: '100%',
   },
   submitButton: {
     alignItems: 'center',
-    marginTop: 20,
+    marginBottom: '5%',
   },
 });
