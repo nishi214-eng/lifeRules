@@ -10,8 +10,8 @@ FireBase<br>
 OpenAI api<br>
 # ハッカソンでの挑戦
 ハッカソンのチームメンバーに教えていただいた、github の Projects機能によるタスク管理とIssueドリブン開発に挑戦
-# 担当
-FireStoreを利用したデータ管理
-openAi apiを利用する関数の作成
-プッシュ通知送信の実装
+# 主な担当
+FireStoreを利用したデータ管理<br>
+openAi apiを利用する関数の作成<br>
+プッシュ通知送信の実装<br>
 中間発表の資料作成とプレゼン
