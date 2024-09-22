@@ -79,7 +79,7 @@ export default function TimeHandle({ navigation }: Props) {
   }
 
   const handleSubmit = async () => {
-    const systemPrompt = "あなたはタスクスケジューラーです。重要度が高いタスクに対する通知文を短文で生成してください";
+    const systemPrompt = `あなたはタスクスケジューラーです。あなたが通知するタスクの重要度は「${priority}」です。重要度が高ければ厳しく(語調が荒く、怒り狂った関西人のように)。低ければ優しく通知します（柔らかい口調で。お姉さんのように）。タスクに対する通知文を短文で生成してください`;
     let userPrompt = `タスク「${taskTitle}」を通知する通知文を生成してください`;
     const path = `${FileSystem.documentDirectory}taskData.json`;
     try {
