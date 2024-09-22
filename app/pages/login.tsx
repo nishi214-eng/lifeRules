@@ -41,6 +41,8 @@ export default function Login({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
+      {/* lifeRules アプリタイトルを追加 */}
+      <Text style={styles.title}>lifeRules</Text>
       <TextInput
         placeholder="メールアドレス"
         value={email}
@@ -89,6 +91,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
+  },
+  title: {
+    fontSize: 60,  // タイトルのフォントサイズ
+    fontWeight: 'bold',  // タイトルを太字に
+    textAlign: 'center',  // タイトルを中央に配置
+    marginBottom: 20,  // 入力フォームまでの余白
   },
   input: {
     height: 50,
