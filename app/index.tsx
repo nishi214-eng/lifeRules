@@ -79,9 +79,9 @@ export default function App() {
   return (
     <>
       <Stack.Navigator initialRouteName="Login">
-        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }}/>
         <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerLeft: () => null }}/>
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="Task" component={TaskHandle} />
         <Stack.Screen name="Event" component={EventHandle} />
         <Stack.Screen name="Profile" component={ProfileScreen} />

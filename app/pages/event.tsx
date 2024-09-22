@@ -102,7 +102,7 @@ export default function EventHandle({ navigation }: Props) {
 
   const handleGenerateTodoList = async () => {
     console.log('Data saved to', getCurrentISOTime());
-    const userPrompt = `今は${getCurrentISOTime()}です．${date}，${time}にあるイベント「${eventTitle}」に基づいて、タスクのリストを生成してください。各タスクは以下の形式で出力してください：\n\nタスクのタイトル\nYYYY-MM-DD\nHH:MM\n高、中、低\n\n追加の文字，説明やアドバイスは不要です。タスクのタイトルの前には追加の文字（」「タスクのタイトル」のような文字列）は不要です．タイトルは日本語で出す`;
+    const userPrompt = `今は${getCurrentISOTime()}です．${date}，${time}にあるイベント「${eventTitle}」に基づいて、今日からのタスクのリストを生成してください。各タスクは以下の形式で出力してください：\n\nタスクのタイトル\nYYYY-MM-DD\nHH:MM\n高、中、低\n\n追加の文字，説明やアドバイスは不要です。タスクのタイトルの前には追加の文字（」「タスクのタイトル」のような文字列）は不要です．タイトルは日本語で出す`;
 
     try {
       const response = await requestOpenAi("あなたはタスク管理者です。", userPrompt);
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   submitContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingBottom: '100%',
+    paddingBottom: 30,
   },
   submitButton: {
     alignItems: 'center',

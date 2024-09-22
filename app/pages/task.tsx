@@ -378,7 +378,7 @@ const styles = StyleSheet.create({
   submitContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    paddingBottom: '100%',
+    paddingBottom: 30,
   },
   submitButton: {
     alignItems: 'center',

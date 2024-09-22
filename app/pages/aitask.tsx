@@ -43,11 +43,16 @@ export default function AiTask({ route, navigation }: Props) {
       const deadline = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day), Number(hours), Number(minutes)));
       const notificationId = await schedulePushNotification(task.aipriority,task.aitask,deadline);
       let notId = String(notificationId);
+      // Log the date and time in both formats
+      console.log("Original Date:", task.deadlineDate);
+      console.log("Original Time:", task.deadlineTime);
+      console.log("ISO Formatted Date:", deadline.toISOString());
+      console.log("ISO Formatted Time:", deadline.toISOString());
       // addTask
       await aiAddTask(
         task.aitask,
-        task.deadlineDate,
-        task.deadlineTime,
+        deadline.toISOString(),
+        deadline.toISOString(),
         task.aipriority,
         notId
       )

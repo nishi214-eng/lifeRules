@@ -58,7 +58,7 @@ export const aiAddTask = async (
       notificationId: notificationId,
       selectedTag: "AI"
     });
-    alert(`Task successfully added with ID: ${docRef.id}`);// to delete later
+    //alert(`Task successfully added with ID: ${docRef.id}`);// to delete later
   } catch (error) {
     console.error('Error adding task: ', error);
   }
