@@ -8,7 +8,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
-    
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -35,10 +34,16 @@
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
       "@react-native-firebase/dynamic-links",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "191710c0-a40b-4ff1-b7cd-f50d9cee4d7a"
+      }
     }
   }
 }
