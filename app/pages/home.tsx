@@ -79,18 +79,25 @@ export default function HomeScreen({ navigation }: Props) {
                 </ScrollView>
 
                 <Portal>
-                    {/* 背景の曇りを追加 */}
-                    {open && <View style={styles.overlay} />}
-                    <FAB.Group
-                        open={open}
-                        icon={open ? 'plus' : 'plus'}
-                        actions={[
-                            { icon: 'note', label: 'タスクを追加', onPress: () => navigation.navigate('Task') },
-                            { icon: 'calendar-today', label: 'イベントを追加', onPress: () => navigation.navigate('Event') },
-                        ]}
-                        onStateChange={onStateChange}
-                        style={styles.fab} // ここでスタイルを適用
-                    />
+                  {open && <View style={styles.overlay} />}
+                  <FAB.Group
+                    open={open}
+                    icon={open ? 'plus' : 'plus'}
+                    actions={[
+                      {
+                        icon: 'note',
+                        label: 'タスクを追加',
+                        onPress: () => navigation.navigate('Task'),
+                      },
+                      {
+                        icon: 'calendar-today',
+                        label: 'イベントを追加',
+                        onPress: () => navigation.navigate('Event'),
+                      },
+                    ]}
+                    onStateChange={onStateChange}
+                    style={styles.fab}
+                  />
                 </Portal>
             </View>
         </PaperProvider>
