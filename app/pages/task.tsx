@@ -108,12 +108,14 @@ export default function TimeHandle({ navigation }: Props) {
           );
           await FileSystem.writeAsStringAsync(path, JSON.stringify(taskData, null, 2));
           console.log('Data saved to', path);
+          
         }
       } catch (error) {
         console.error('Failed to save data:', error);
       }
 
       console.log('Task Data:', taskData);
+      navigation.navigate('Home');
     } catch (error) {
       console.error("Error generating text:", error); // エラーハンドリング
     }

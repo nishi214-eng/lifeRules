@@ -13,6 +13,15 @@ interface Task {
     selectedPriority: string | null;
     selectedTag: string | null;
 }
+
+const getCurrentISOTime = () => {
+    const currentTime = new Date();
+    return currentTime.toISOString();
+    
+};
+
+
+
     export const ViewTask = ({ task }: { task: Task }) => {
         const deleteTask = async() => {
             let uid = auth.currentUser?.uid 
@@ -21,6 +30,13 @@ interface Task {
             await cancelPushNotification(task.notificationId);
             alert ("タスクを削除しました")
         }
+        const formattedDate = new Date(task.date).toLocaleDateString('ja-JP'); // Format as YYYY-MM-DD
+        const formattedTime = new Date(task.time).toLocaleTimeString('ja-JP', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false, // Ensures 24-hour format
+        });
+
         return (
             <>
                 <View style={{ height: 20 }} />
@@ -39,11 +55,11 @@ interface Task {
                         </View>
                     </View>
                     <Text style={styles.taskstartText}>
-                        タスク開始: {task.date}
+                        タスク締切日: {formattedDate}
                     </Text>
                 </View>
                 <View style={styles.taskInfo}>
-                    <Text style={styles.taskstartText}>タスク開始: 2024年9月21日 22:30~</Text>
+                    <Text style={styles.taskstartText}>タスク締切時間:  ~ {formattedTime}</Text>
                     <Button onPress={deleteTask} style={styles.deleteButton}>
                         <Text style={styles.completetask}>タスク完了</Text>
                     </Button>
@@ -56,24 +72,26 @@ interface Task {
         eventTitle:string,
         date:string,
         time:string,
+        note:string,
         notificationId:string
     }
     
     export const ViewEvent = ({ event }: { event: Event }) => {
         return (
             <>
-                <View style={{ height: 20 }} />
-                <View style={styles.taskbox}>
-                    <View style={styles.taskInfo}>
+                <View style={styles.eventbox}>
+                    <View style={styles.eventInfo}>
                         <View style={styles.tasktitlebox}>
                             <Text style={styles.taskText} numberOfLines={2}>
                                 {event.eventTitle}
                             </Text>
                         </View>
-                        
-                    </View>
-                    <Text style={styles.taskstartText}>
+                        <Text style={styles.taskstartText}>
                         イベント開始: {event.date}
+                        </Text>
+                    </View>
+                    <Text style={styles.taskText} numberOfLines={2}>
+                        ノート: {event.note}
                     </Text>
                 </View>
             </>
@@ -152,6 +170,15 @@ interface Task {
             padding: 10,
             height: 115,
         },
+        eventbox: {
+            flexDirection: 'row',
+            backgroundColor: '#eeeeee',
+            gap: 8,
+            marginTop: 10,
+            marginBottom: 10,
+            padding: 10,
+            height: 115,
+        },
         tasktitlebox: {
             backgroundColor: '#eeeeee',
             gap: 8,
@@ -161,6 +188,11 @@ interface Task {
         taskInfo: {
             flexDirection: 'row',
             alignItems: 'center',
+        },
+        eventInfo: {
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'flex-start',
         },
         importance: {
             marginLeft: 20, // 重要度とタスクの間に少し間隔をあける

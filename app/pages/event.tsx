@@ -64,15 +64,17 @@ export default function EventHandle({ navigation }: Props) {
         eventTitle,
         date: date.toISOString(),
         time: time.toISOString(),
+        note,
         notificationId
       };
       try {
-        alert("test");
+        //alert("test");
         if (notId) {
           await addEvent(
             eventData.eventTitle,
             eventData.date,
             eventData.time,
+            eventData.note,
             notId,
           );
           await FileSystem.writeAsStringAsync(path, JSON.stringify(eventData, null, 2));

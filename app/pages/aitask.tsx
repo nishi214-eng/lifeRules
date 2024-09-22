@@ -21,7 +21,7 @@ interface Props {
 
 export default function AiTask({ route, navigation }: Props) {
   const { tasks } = route.params;
-//  console.log('Parsed tasks:', tasks);
+  console.log('Parsed tasks:', tasks);
   const [checkedItems, setCheckedItems] = useState<boolean[]>(Array(tasks.length).fill(false));
 
   const toggleCheckbox = (index: number) => {
@@ -48,6 +48,7 @@ export default function AiTask({ route, navigation }: Props) {
         task.aitask,
         task.deadlineDate,
         task.deadlineTime,
+        task.aipriority,
         notId
       )
       return {
@@ -64,7 +65,6 @@ export default function AiTask({ route, navigation }: Props) {
     console.log('Saved JSON:', json);
   
     try {
-      
       const fileUri = `${FileSystem.documentDirectory}aiTasks.json`; // *******PATH!!!*********
       await FileSystem.writeAsStringAsync(fileUri, json);
       alert('Checked tasks saved successfully!');

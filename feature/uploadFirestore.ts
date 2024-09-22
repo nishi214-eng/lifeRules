@@ -38,8 +38,8 @@ export const aiAddTask = async (
   taskTitle: string,
   date: string,
   time: string,
+  priority: string,
   notificationId: string,
-
 ) => {
   // ユーザーのuidを取得
   const uid = auth.currentUser?.uid;
@@ -54,9 +54,11 @@ export const aiAddTask = async (
       taskTitle: taskTitle,
       date: date,
       time: time,
+      selectedPriority: priority,
       notificationId: notificationId,
+      selectedTag: "AI"
     });
-    alert(`Task successfully added with ID: ${docRef.id}`);
+    alert(`Task successfully added with ID: ${docRef.id}`);// to delete later
   } catch (error) {
     console.error('Error adding task: ', error);
   }
@@ -67,6 +69,7 @@ export const addEvent = async (
   eventTitle: string,
   dete: string,
   time: string,
+  note: string,
   notificationId: string
 ) => {
   // ユーザーのuidを取得
@@ -82,8 +85,7 @@ export const addEvent = async (
       dete: dete,
       time: time,
       notificationId: notificationId,
-      selectedPriority: "AI",
-      selectedTag: "AI"
+      note: note,
     });
     console.log('Task successfully added with UID: ', docRef.id);
   } catch (error) {
