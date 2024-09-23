@@ -8,7 +8,7 @@ https://www.canva.com/design/DAGRXhBW_UM/NuUIwtP0Ps1Xz58IIxhH2Q/view?utm_content
 todoリスト<br><br>
 <img src="https://github.com/user-attachments/assets/12307937-1d6d-4136-9086-70b2e64d573b" width="200">AIがタスク内容とその重要度を基に通知文を生成→プッシュ通知を送信<br><br>
 <img width="200" alt="image" src="https://github.com/user-attachments/assets/ea22b0b3-d72f-491d-9cdc-9d606e10debc">
-Todoリストに予定を追加すると、AIがその予定の実行に必要なタスクを算出(例：ハッカソン→環境構築,実装,発表会)<br>
+AIが予定の実行に必要なタスクを算出(例：ハッカソン→環境構築,実装,発表会)<br>
 <br>
 
 # 利用技術
